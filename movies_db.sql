@@ -17,7 +17,7 @@ USE `movies_db` ;
 -- -----------------------------------------------------
 -- Table `movies_db`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `pulse_db`.`users` (
+CREATE TABLE IF NOT EXISTS `movies_db`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
