@@ -29,6 +29,11 @@ def index():
         return redirect("/dashboard")
     return redirect("/logout")
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/registerPage')
+
 
 # Register Route
 @app.route("/registerPage")
