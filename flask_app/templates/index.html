@@ -38,10 +38,11 @@
 								<span class="card__rate card__rate--yellow">{{movie['vote_average']}}</span>
 							</div>
 							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">Blindspotting</a></h3>
+								<h3 class="card__title"><a href="details.html">{{movie['title']}}</a></h3>
 								<span class="card__category">
-									<a href="#">Comedy</a>
-									<a href="#">Drama</a>
+									{% for genre in movie['genre_ids'] %}
+									<a href="#">{{genre}}</a>
+									{%endfor%}
 								</span>
 							</div>
 						</div>
