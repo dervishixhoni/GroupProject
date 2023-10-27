@@ -53,7 +53,7 @@ def register():
     string = "0123456789ABCDEFGHIJKELNOPKQSTUV"
     vCode = ""
     length = len(string)
-    for i in range(8):
+    for i in range(6):
         vCode += string[math.floor(random.random() * length)]
     verificationCode = vCode
 
@@ -234,14 +234,9 @@ def dashboard():
     loggedUser = User.get_user_by_id(data)
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
-    liked_posts = User.get_user_liked_posts(data)
-    faved_posts = User.get_user_faved_posts(data)
     return render_template(
-        "dashboard.html",
-        posts=Post.get_all(data),
+        "index.html",
         loggedUser=loggedUser,
-        liked_posts=liked_posts,
-        faved_posts=faved_posts,
     )
 
 
@@ -255,304 +250,20 @@ def profile():
     loggedUser = User.get_user_by_id(data)
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
-    posts = Post.get_all_user_posts(data)
-    no_posts = len(Post.get_all_user_posts(data))
-    followers = len(User.get_followers(data))
-    followings = len(User.get_followings(data))
-    faved_posts = User.get_user_faved_posts(data)
-    liked_posts = User.get_user_liked_posts(data)
     return render_template(
         "profile.html",
-        posts=posts,
-        loggedUser=loggedUser,
-        no_posts=no_posts,
-        followers=followers,
-        followings=followings,
-        faved_posts=faved_posts,
-        liked_posts=liked_posts,
     )
 
 
-# View liked posts
-@app.route("/liked")
-def likedPosts():
-    if "user_id" not in session:
-        return redirect("/")
-
-    data = {"user_id": session["user_id"]}
-    loggedUser = User.get_user_by_id(data)
-    if loggedUser["isVerified"] == 0:
-        return redirect("/verify/email")
-    posts = Post.user_liked_posts(data)
-    no_posts = len(Post.get_all_user_posts(data))
-    followers = len(User.get_followers(data))
-    followings = len(User.get_followings(data))
-    faved_posts = User.get_user_faved_posts(data)
-    liked_posts = User.get_user_liked_posts(data)
-    return render_template(
-        "likes.html",
-        posts=posts,
-        loggedUser=loggedUser,
-        no_posts=no_posts,
-        followers=followers,
-        followings=followings,
-        liked_posts=liked_posts,
-        faved_posts=faved_posts,
-    )
 
 
-# View liked posts
-@app.route("/faved")
-def favedPosts():
-    if "user_id" not in session:
-        return redirect("/")
-
-    data = {"user_id": session["user_id"]}
-    loggedUser = User.get_user_by_id(data)
-    if loggedUser["isVerified"] == 0:
-        return redirect("/verify/email")
-    posts = Post.user_faved_posts(data)
-    no_posts = len(Post.get_all_user_posts(data))
-    followers = len(User.get_followers(data))
-    followings = len(User.get_followings(data))
-    liked_posts = User.get_user_liked_posts(data)
-    faved_posts = User.get_user_faved_posts(data)
-    return render_template(
-        "saved.html",
-        posts=posts,
-        loggedUser=loggedUser,
-        no_posts=no_posts,
-        followers=followers,
-        followings=followings,
-        liked_posts=liked_posts,
-        faved_posts=faved_posts,
-    )
 
 
-@app.route("/profile/followers")
-def profileFollowers():
-    if "user_id" not in session:
-        return redirect("/")
-
-    data = {"user_id": session["user_id"]}
-    loggedUser = User.get_user_by_id(data)
-    if loggedUser["isVerified"] == 0:
-        return redirect("/verify/email")
-    posts = Post.get_all_user_posts(data)
-    no_posts = len(Post.get_all_user_posts(data))
-    no_followers = len(User.get_followers(data))
-    followings = User.get_followings(data)
-    no_followings = len(User.get_followings(data))
-    followers = User.get_followers(data)
-    return render_template(
-        "followers.html",
-        posts=posts,
-        loggedUser=loggedUser,
-        no_posts=no_posts,
-        followers=followers,
-        followings=followings,
-        folls=no_followers,
-        fwings=no_followings,
-        followed=User.get_followers_id(data),
-    )
 
 
-@app.route("/profile/followings")
-def profileFollowings():
-    if "user_id" not in session:
-        return redirect("/")
-
-    data = {"user_id": session["user_id"]}
-    loggedUser = User.get_user_by_id(data)
-    if loggedUser["isVerified"] == 0:
-        return redirect("/verify/email")
-    posts = Post.get_all_user_posts(data)
-    no_posts = len(Post.get_all_user_posts(data))
-    no_followers = len(User.get_followers(data))
-    followings = User.get_followings(data)
-    no_followings = len(User.get_followings(data))
-    followers = User.get_followers(data)
-    return render_template(
-        "followings.html",
-        posts=posts,
-        loggedUser=loggedUser,
-        no_posts=no_posts,
-        followers=followers,
-        followings=followings,
-        folls=no_followers,
-        fwings=no_followings,
-        followed=User.get_followers_id(data),
-    )
 
 
-# View User
-@app.route("/user/<int:id>")
-def viewUser(id):
-    if "user_id" in session:
-        data = {"user_id": session["user_id"], "person_id": id}
-        loggedUser = User.get_user_by_id(data)
-        if loggedUser["isVerified"] == 0:
-            return redirect("/verify/email")
-        person = User.get_person_by_id(data)
-        likes = Post.get_all_post_likes(data)
-        no_posts = len(Post.get_all_person_posts(data))
-        followers = len(User.get_followers_user(data))
-        followings = len(User.get_followings_user(data))
-        return render_template(
-            "user.html",
-            loggedUser=loggedUser,
-            person=person,
-            posts=Post.get_all_person_posts(data),
-            likes=likes,
-            liked_posts=User.get_user_liked_posts(data),
-            faved_posts=User.get_user_faved_posts(data),
-            followed=User.get_follow_by_userid(data),
-            followers=followers,
-            followings=followings,
-            no_posts=no_posts,
-        )
-    return redirect("/")
 
 
-# Follow user
-@app.route("/follow/user/<int:id>")
-def follow(id):
-    if "user_id" in session:
-        data = {"user_id": session["user_id"], "person_id": id}
-        loggedUser = User.get_user_by_id(data)
-        person = User.get_person_by_id(data)
-        User.follow(data)
-        return redirect(request.referrer)
 
 
-# Unfollow user
-@app.route("/unfollow/user/<int:id>")
-def unfollow(id):
-    if "user_id" in session:
-        data = {"user_id": session["user_id"], "person_id": id}
-        loggedUser = User.get_user_by_id(data)
-        person = User.get_person_by_id(data)
-        User.unfollow(data)
-        return redirect(request.referrer)
-
-
-# Search Route
-@app.route("/searchUser")
-def searchPage():
-    if "user_id" in session:
-        return render_template("search.html")
-    return redirect("/")
-
-
-@app.route("/search", methods=["GET", "POST"])
-def search():
-    if "user_id" in session:
-        if request.method == "POST":
-            data = {
-                "user_id": session["user_id"],
-                "search_query": request.form["search_query"],
-            }
-
-            results = connectToMySQL("pulse_db").query_db(
-                f"SELECT * FROM users WHERE first_name LIKE '%{data['search_query']}%' OR "
-                f"last_name "
-                f"LIKE '%{data['search_query']}%';"
-            )
-            users = []
-            if results:
-                for user in results:
-                    users.append(user)
-                return render_template(
-                    "search.html",
-                    results=users,
-                    loggedUser=User.get_user_by_id(data),
-                    search=request.form["search_query"],
-                )
-            return render_template(
-                "search.html",
-                results=users,
-                loggedUser=User.get_user_by_id(data),
-                search=request.form["search_query"],
-            )
-    return redirect("/search")
-
-
-# =========================================================================================
-# ================================ MESSAGES =================================
-
-
-@app.route("/inbox")
-def loadInbox():
-    if "user_id" in session:
-        data = {"user_id": session["user_id"]}
-        loggedUser = User.get_user_by_id(data)
-        inboxes = Message.inboxes(data)
-        return render_template("inbox.html", loggedUser=loggedUser, inboxes=inboxes)
-    return redirect("/logout")
-
-
-@app.route("/notifications")
-def loadNotifications():
-    if "user_id" in session:
-        data = {"user_id": session["user_id"]}
-        loggedUser = User.get_user_by_id(data)
-        notifications = User.get_notifications(data)
-        print("=============================================")
-        print(notifications)
-        print("=============================================")
-        return render_template(
-            "notifications.html", loggedUser=loggedUser, notifications=notifications
-        )
-    return redirect("/logout")
-
-
-# @app.route('/messages/<int:id>')
-# def loadMessages(id):
-#     if 'user_id' in session:
-#         data = {
-#             'user_id': session['user_id'],
-#             'person_id': id
-#         }
-#         loggedUser = User.get_user_by_id(data)
-#         person = User.get_person_by_id(data)
-#         messages = Message.get_messages_by_user(data)
-#         return render_template('test.html', loggedUser=loggedUser, person=person,
-#                                messages=messages)
-#     return redirect('/logout')
-
-
-@app.route("/messages/<int:id>")
-def loadMessages(id):
-    if "user_id" in session:
-        # Fetch the person's information and pass it to the template
-        data = {"user_id": session["user_id"], "person_id": id}
-        loggedUser = User.get_user_by_id(data)
-        person = User.get_person_by_id({"person_id": id})
-        messages = Message.get_messages_by_user(data)
-        return render_template(
-            "messages.html", loggedUser=loggedUser, person=person, messages=messages
-        )
-    return redirect("/logout")
-
-
-# Add Comment
-@app.route("/add/message/<int:id>", methods=["POST"])
-def message(id):
-    if "user_id" not in session:
-        return redirect("/")
-    data = {
-        "user_id": session["user_id"],
-        "person_id": id,
-        "content": request.form["content"],
-    }
-    loggedUser = User.get_user_by_id(data)
-    person = User.get_person_by_id(data)
-    Message.save(data)
-    return redirect(request.referrer)
-
-
-# Log Out
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/loginPage")
