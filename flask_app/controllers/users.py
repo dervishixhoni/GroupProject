@@ -5,6 +5,7 @@ import smtplib
 from flask_app import app
 from flask_app.models.user import User
 from flask_app.config.mysqlconnection import connectToMySQL
+import requests
 
 from flask import render_template, redirect, session, request, flash
 from flask_bcrypt import Bcrypt
@@ -112,7 +113,7 @@ def activateAccount():
     if "user_id" not in session:
         return redirect("/")
     data = {"user_id": session["user_id"]}
-    user = User.get_user_by_id(data)    
+    user = User.get_user_by_id(data)
     if user["isVerified"] == 1:
         return redirect("/dashboard")
 
@@ -234,9 +235,18 @@ def dashboard():
     loggedUser = User.get_user_by_id(data)
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
+    url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc"
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+    }
+    response = requests.get(url, headers=headers)
+    print(response.json())
     return render_template(
         "index.html",
         loggedUser=loggedUser,
+        movies=response.json()['results']
     )
 
 
@@ -253,17 +263,3 @@ def profile():
     return render_template(
         "profile.html",
     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-

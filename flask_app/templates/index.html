@@ -28,63 +28,14 @@
 
 				<div class="col-12">
 					<div class="owl-carousel home__carousel home__carousel--bg">
+						{%for movie in movies%}
 						<div class="card card--big">
 							<div class="card__cover">
-								<img src="img/covers/cover.jpg" alt="">
+								<img src="https://image.tmdb.org/t/p/w500{{movie['poster_path']}}" alt="">
 								<a href="details.html" class="card__play">
 									<i class="icon ion-ios-play"></i>
 								</a>
-								<span class="card__rate card__rate--green">8.4</span>
-							</div>
-							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">I Dream in Another Language</a></h3>
-								<span class="card__category">
-									<a href="#">Action</a>
-									<a href="#">Triler</a>
-								</span>
-							</div>
-						</div>
-
-						<div class="card card--big">
-							<div class="card__cover">
-								<img src="img/covers/cover2.jpg" alt="">
-								<a href="details.html" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a>
-								<span class="card__rate card__rate--green">7.1</span>
-							</div>
-							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">Benched</a></h3>
-								<span class="card__category">
-									<a href="#">Comedy</a>
-								</span>
-							</div>
-						</div>
-
-						<div class="card card--big">
-							<div class="card__cover">
-								<img src="img/covers/cover3.jpg" alt="">
-								<a href="details.html" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a>
-								<span class="card__rate card__rate--green">7.9</span>
-							</div>
-							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">Whitney</a></h3>
-								<span class="card__category">
-									<a href="#">Romance</a>
-									<a href="#">Drama</a>
-								</span>
-							</div>
-						</div>
-
-						<div class="card card--big">
-							<div class="card__cover">
-								<img src="img/covers/cover4.jpg" alt="">
-								<a href="details.html" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a>
-								<span class="card__rate card__rate--yellow">6.8</span>
+								<span class="card__rate card__rate--yellow">{{movie['vote_average']}}</span>
 							</div>
 							<div class="card__content">
 								<h3 class="card__title"><a href="details.html">Blindspotting</a></h3>
@@ -94,23 +45,7 @@
 								</span>
 							</div>
 						</div>
-
-						<div class="card card--big">
-							<div class="card__cover">
-								<img src="img/covers/cover5.jpg" alt="">
-								<a href="details.html" class="card__play">
-									<i class="icon ion-ios-play"></i>
-								</a>
-								<span class="card__rate card__rate--yellow">6.2</span>
-							</div>
-							<div class="card__content">
-								<h3 class="card__title"><a href="details.html">Blindspotting</a></h3>
-								<span class="card__category">
-									<a href="#">Comedy</a>
-									<a href="#">Drama</a>
-								</span>
-							</div>
-						</div>
+						{%endfor%}
 					</div>
 				</div>
 			</div>
