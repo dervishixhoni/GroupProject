@@ -41,7 +41,7 @@
 								<h3 class="card__title"><a href="/details/{{movie['id']}}">{{movie['title']}}</a></h3>
 								<span class="card__category">
 									{% for genre in movie['genre_ids'] %}
-									<a href="#">{{genre}}</a>
+									<a href="/catalog/{{genre}}">{{genredict[genre]}}</a>
 									{%endfor%}
 								</span>
 							</div>

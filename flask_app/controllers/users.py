@@ -15,6 +15,28 @@ bcrypt = Bcrypt(app)
 from .env import ADMINEMAIL
 from .env import PASSWORD
 
+genredict = {
+    28: 'Action',
+    12: 'Adventure',
+    16: 'Animation',
+    35: 'Comedy',
+    80: 'Crime',
+    99: 'Documentary',
+    18: 'Drama',
+    10751: 'Family',
+    14: 'Fantasy',
+    36: 'History',
+    27: 'Horror',
+    10402: 'Music',
+    9648: 'Mystery',
+    10749: 'Romance',
+    878: 'Science Fiction',
+    10770: 'TV Movie',
+    53: 'Thriller',
+    10752: 'War',
+    37: 'Western'
+}
+
 
 # Invalid Route
 @app.errorhandler(404)
@@ -249,7 +271,7 @@ def dashboard():
     }
     response = requests.get(url, headers=headers)
     return render_template(
-        "index.html", loggedUser=loggedUser, movies=response.json()["results"]
+        "index.html", loggedUser=loggedUser, movies=response.json()["results"],genredict=genredict
     )
 
 
@@ -290,4 +312,5 @@ def details(id):
     genres+=str(response.json()['genres'][len(response.json()['genres'])-1]['id'])
     url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={genres}"
     recresponse = requests.get(url, headers=headers)
-    return render_template("details.html", movie=response.json(),recommandations = recresponse.json(),trailer=trailer_url)
+    print(recresponse.json())
+    return render_template("details.html", movie=response.json(),recommendations = recresponse.json(),trailer=trailer_url,genredict = genredict)
