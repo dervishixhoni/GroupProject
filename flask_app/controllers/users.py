@@ -29,10 +29,11 @@ def index():
         return redirect("/dashboard")
     return redirect("/logout")
 
-@app.route('/logout')
+
+@app.route("/logout")
 def logout():
     session.clear()
-    return redirect('/registerPage')
+    return redirect("/registerPage")
 
 
 # Register Route
@@ -247,11 +248,8 @@ def dashboard():
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
     }
     response = requests.get(url, headers=headers)
-    print(response.json())
     return render_template(
-        "index.html",
-        loggedUser=loggedUser,
-        movies=response.json()['results']
+        "index.html", loggedUser=loggedUser, movies=response.json()["results"]
     )
 
 
@@ -268,3 +266,28 @@ def profile():
     return render_template(
         "profile.html",
     )
+
+
+@app.route(f"/details/<int:id>")
+def details(id):
+    if "user_id" not in session:
+        return redirect("/")
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+    }
+    detailurl = f"https://api.themoviedb.org/3/movie/{id}?language=en-US"
+    response = requests.get(detailurl, headers=headers)
+    # videourl = f"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US"
+    # videoresponse = requests.get(url, headers=headers)
+    # if videoresponse !=200 :
+    #     for r in videoresponse.json()['results']:
+    #         if r['type'] == 'Trailer':
+    #             trailer_url = 
+    genres = ''
+    for i in range(len(response.json()['genres'])-1):
+        genres += str(response.json()['genres'][i]['id'])+'|'
+    genres+=str(response.json()['genres'][len(response.json()['genres'])-1]['id'])
+    url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={genres}"
+    recresponse = requests.get(url, headers=headers)
+    return render_template("details.html", movie=response.json(),recommandations = recresponse.json())
