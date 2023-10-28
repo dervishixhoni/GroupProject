@@ -286,7 +286,7 @@ def profile():
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
     return render_template(
-        "profile.html",
+        "profile.html", loggedUser = loggedUser,
     )
 
 
