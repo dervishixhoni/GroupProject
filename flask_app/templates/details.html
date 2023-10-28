@@ -8,7 +8,7 @@
 		<div class="row">
 			<!-- title -->
 			<div class="col-12">
-				<h1 class="section__title section__title--mb">I Dream in Another Language</h1>
+				<h1 class="section__title section__title--mb">{{movie['title']}}</h1>
 			</div>
 			<!-- end title -->
 
@@ -19,11 +19,11 @@
 						<!-- card cover -->
 						<div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-5">
 							<div class="card__cover">
-								<img src="img/covers/cover1.jpg" alt="">
-								<span class="card__rate card__rate--green">8.4</span>
+								<img src="https://image.tmdb.org/t/p/w500{{movie['poster_path']}}" alt="">
+								<span class="card__rate card__rate--yellow">{{movie['vote_average']}}</span>
 							</div>
-							<a href="http://www.youtube.com/watch?v=0O2aH4XLbto" class="card__trailer"><i
-									class="icon ion-ios-play-circle"></i> Watch trailer</a>
+							<a href="..." class="card__trailer"><i class="icon ion-ios-play-circle"></i> Watch
+								trailer</a>
 						</div>
 						<!-- end card cover -->
 
@@ -31,27 +31,18 @@
 						<div class="col-12 col-md-8 col-lg-9 col-xl-7">
 							<div class="card__content">
 								<ul class="card__meta">
-									<li><span>Director:</span> Vince Gilligan</li>
-									<li><span>Cast:</span> <a href="#">Brian Cranston</a> <a href="#">Jesse Plemons</a>
-										<a href="#">Matt Jones</a> <a href="#">Jonathan Banks</a> <a href="#">Charles
-											Baker</a> <a href="#">Tess Harper</a></li>
-									<li><span>Genre:</span> <a href="#">Action</a>
-										<a href="#">Triler</a>
+									<li><span>Genre:</span>
+										{% for g in movie['genres'] %}
+										<a href="#">{{g['name']}}</a>
+										{% endfor %}
 									</li>
-									<li><span>Release year:</span> 2019</li>
-									<li><span>Running time:</span> 130 min</li>
-									<li><span>Country:</span> <a href="#">USA</a></li>
+									<li><span>Release date:</span>{{movie['release_date']}}</li>
+									<li><span>Running time:</span>{{movie['runtime']}} min</li>
+									<li><span>Country:</span> <a
+											href="#">{{movie['production_countries'][0]['name']}}</a></li>
 								</ul>
 								<div class="card__description">
-									It is a long established fact that a reader will be distracted by the readable
-									content of a page when looking at its layout. The point of using Lorem Ipsum is that
-									it has a more-or-less normal distribution of letters, as opposed to using 'Content
-									here, content here', making it look like readable English. Many desktop publishing
-									packages and web page editors now use Lorem Ipsum as their default model text, and a
-									search for 'lorem ipsum' will uncover many web sites still in their infancy. The
-									point of using Lorem Ipsum is that it has a more-or-less normal distribution of
-									letters, as opposed to using 'Content here, content here', making it look like
-									readable English.
+									{{movie['tagline']}}
 								</div>
 							</div>
 						</div>
@@ -60,31 +51,6 @@
 				</div>
 			</div>
 			<!-- end content -->
-
-			<!-- player -->
-			<div class="col-12 col-xl-6">
-				<video controls crossorigin playsinline
-					poster="../../cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">
-					<!-- Video files -->
-					<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-						type="video/mp4" size="576">
-					<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"
-						type="video/mp4" size="720">
-					<source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
-						type="video/mp4" size="1080">
-
-					<!-- Caption files -->
-					<track kind="captions" label="English" srclang="en"
-						src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
-					<track kind="captions" label="Français" srclang="fr"
-						src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
-
-					<!-- Fallback for browsers that don't support the <video> element -->
-					<a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-						download>Download</a>
-				</video>
-			</div>
-			<!-- end player -->
 		</div>
 	</div>
 	<!-- end details content -->
