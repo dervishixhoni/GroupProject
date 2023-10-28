@@ -35,7 +35,7 @@
 								<a href="/details/{{movie['id']}}" class="card__play">
 									<i class="icon ion-ios-play"></i>
 								</a>
-								<span class="card__rate card__rate--yellow">{{movie['vote_average']}}</span>
+								<span class="card__rate card__rate--yellow">{{movie['vote_average']|round(1)}}</span>
 							</div>
 							<div class="card__content">
 								<h3 class="card__title"><a href="/details/{{movie['id']}}">{{movie['title']}}</a></h3>
