@@ -38,14 +38,11 @@
                         <ul class="header__nav">
 
                             <li class="header__nav-item">
-                                <a class="dropdown-toggle header__nav-link" href="/" role="button" id="dropdownMenuHome"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Home</a>
+                                <a class="header__nav-link" href="/">Home</a>
                             </li>
 
                             <li class="header__nav-item">
-                                <a class="dropdown-toggle header__nav-link" href="/catalog" role="button"
-                                    id="dropdownMenuCatalog" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">Catalog</a>
+                                <a class="header__nav-link" href="/catalog">Catalog</a>
                             </li>
 
                             <li class="header__nav-item">
@@ -56,8 +53,9 @@
 
                         <!-- header auth -->
                         <div class="header__auth">
-                            <form action="#" class="header__search">
-                                <input class="header__search-input" type="text" placeholder="Search...">
+                            <form action="/search" methof="get" class="header__search">
+                                <input class="header__search-input" type="text" placeholder="Search..."
+                                name="keyword">
                                 <button class="header__search-button" type="submit">
                                     <i class="icon ion-ios-search"></i>
                                 </button>
