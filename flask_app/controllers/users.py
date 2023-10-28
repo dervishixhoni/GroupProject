@@ -324,4 +324,4 @@ def catalog():
     }
     url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
     response = requests.get(url, headers=headers)
-    return render_template('catalog.html',base=response.json()['results'][:18   ],genredict=genredict)
+    return render_template('catalog.html',base=response.json()['results'][:18],genredict=genredict)
