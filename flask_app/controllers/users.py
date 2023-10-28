@@ -270,6 +270,7 @@ def dashboard():
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
     }
     response = requests.get(url, headers=headers)
+    print(response.json())
     return render_template(
         "index.html", loggedUser=loggedUser, movies=response.json()["results"],genredict=genredict
     )
