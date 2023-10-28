@@ -278,16 +278,16 @@ def details(id):
     }
     detailurl = f"https://api.themoviedb.org/3/movie/{id}?language=en-US"
     response = requests.get(detailurl, headers=headers)
-    # videourl = f"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US"
-    # videoresponse = requests.get(url, headers=headers)
-    # if videoresponse !=200 :
-    #     for r in videoresponse.json()['results']:
-    #         if r['type'] == 'Trailer':
-    #             trailer_url = 
+    videourl = f"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US"
+    videoresponse = requests.get(videourl, headers=headers)
+    if videoresponse !=200 :
+        for r in videoresponse.json()['results']:
+            if r['type'] == 'Trailer' and r['site'] == 'YouTube':
+                trailer_url = r['key']
     genres = ''
     for i in range(len(response.json()['genres'])-1):
         genres += str(response.json()['genres'][i]['id'])+'|'
     genres+=str(response.json()['genres'][len(response.json()['genres'])-1]['id'])
     url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={genres}"
     recresponse = requests.get(url, headers=headers)
-    return render_template("details.html", movie=response.json(),recommandations = recresponse.json())
+    return render_template("details.html", movie=response.json(),recommandations = recresponse.json(),trailer=trailer_url)

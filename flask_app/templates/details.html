@@ -22,7 +22,7 @@
 								<img src="https://image.tmdb.org/t/p/w500{{movie['poster_path']}}" alt="">
 								<span class="card__rate card__rate--yellow">{{movie['vote_average']}}</span>
 							</div>
-							<a href="..." class="card__trailer"><i class="icon ion-ios-play-circle"></i> Watch
+							<a href="https://www.youtube.com/watch?v={{trailer}}" class="card__trailer"><i class="icon ion-ios-play-circle"></i> Watch
 								trailer</a>
 						</div>
 						<!-- end card cover -->
@@ -51,6 +51,12 @@
 				</div>
 			</div>
 			<!-- end content -->
+			<div class="col-12 col-xl-6 d-flex align-items-center">
+				<iframe id="player" width="560" height="315" src="https://www.youtube.com/embed/{{trailer}}"
+					title="YouTube video player" frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+					allowfullscreen></iframe>
+			</div>
 		</div>
 	</div>
 	<!-- end details content -->
