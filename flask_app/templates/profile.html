@@ -86,55 +86,51 @@
 		<div class="tab-content">
 			<div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
 				<div class="row row--grid">
+					<div class="dashbox">
+						<div class="dashbox__title">
+							<h3><i class="icon ion-ios-film"></i>Your Watchlist</h3>
+						</div>
 
-					<!-- dashbox -->
-					<div style="margin: auto;">
-						<div class="dashbox">
-							<div class="dashbox__title">
-								<h3><i class="icon ion-ios-film"></i>Your Watchlist</h3>
-							</div>
-
-							<div class="dashbox__table-wrap">
-								{%if watchlist%}
-								<table class="main__table main__table--dash">
-									<thead>
-										<tr>
-											<th>TITLE</th>
-											<th>RATING</th>
-											<th>RELEASE DATE</th>
-											<th>WATCHLIST</th>
-										</tr>
-									</thead>
-									<tbody>
-										{% for movie in watchlist %}
-										<tr>
-											<td class="main_table-text" style="color: white;text-align:center;">
-												<a style="color: white;text-align:center;" href="/details/{{movie['movie_id']}}">
-													{{movie['title']}}
-												</a>
-											</td>
-											<td class="main_table-text" style="color: white;text-align:center;">
-												{{movie['rating']}}
-											</td>
-											<td lass="main_table-text" style="color: white;text-align:center;">
-												{{movie['release_year']}}
-											</td>
-											<td class="main_table-text">
-												<a href="/remove/{{movie['movie_id']}}" class="header__sign-in">
-													<span>Remove</span>
-												</a>
-											</td>
-										</tr>
-										{%endfor%}
-									</tbody>
-								</table>
-								{% else %}
-								There is nothing on your Watchlist
-								{% endif %}
-							</div>
+						<div class="dashbox__table-wrap">
+							{%if watchlist%}
+							<table class="main__table main__table--dash" style="border: 5px;">
+								<thead>
+									<tr>
+										<th>TITLE</th>
+										<th>RATING</th>
+										<th>RELEASE DATE</th>
+										<th>WATCHLIST</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for movie in watchlist %}
+									<tr>
+										<td class="main_table-text" style="color: white;text-align:center;">
+											<a style="color: white;text-align:center;"
+												href="/details/{{movie['movie_id']}}">
+												{{movie['title']}}
+											</a>
+										</td>
+										<td class="main_table-text" style="color: white;text-align:center;">
+											{{movie['rating']|round(1)}}
+										</td>
+										<td lass="main_table-text" style="color: white;text-align:center;">
+											{{movie['release_year']}}
+										</td>
+										<td class="main_table-text">
+											<a href="/remove/{{movie['movie_id']}}" class="header__sign-in">
+												<span>Remove</span>
+											</a>
+										</td>
+									</tr>
+									{%endfor%}
+								</tbody>
+							</table>
+							{% else %}
+							There is nothing on your Watchlist
+							{% endif %}
 						</div>
 					</div>
-					<!-- end dashbox -->
 				</div>
 			</div>
 			<div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
