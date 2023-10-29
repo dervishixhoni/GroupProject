@@ -150,14 +150,13 @@
 				</div>
 				<!-- end card -->
 				{% endfor %}
-
-				<div class="row">
-					<!-- more -->
-					<div class="col-12">
-						<button class="catalog__more" type="button">Load more</button>
-					</div>
-					<!-- end more -->
+			</div>
+			<div class="row" style="margin: auto;" >
+				<!-- more -->
+				<div class="col-12">
+					<button onclick="loadmorecontent()" class="catalog__more" type="button">Load more</button>
 				</div>
+				<!-- end more -->
 			</div>
 		</div>
 		<!-- end catalog -->
@@ -238,7 +237,13 @@
 	</section>
 	end section -->
 	<script>
-		function getFilter() {
+		function getFilter(b=1) {
+			if (b==1){
+				loadmore = false
+			}
+			else{
+				loadmore = true
+			}
 			const genreDictionary = {
 				"Action": 28,
 				"Adventure": 12,
@@ -265,7 +270,6 @@
 			const ratinghigh = document.getElementById("filter__imbd-end").innerText
 			const yearlow = document.getElementById("filter__years-start").innerText
 			const yearhigh = document.getElementById("filter__years-end").innerText
-			console.log(ratinglow,ratinghigh,yearlow,yearhigh);
 			const options = {
 				method: 'GET',
 				headers: {
@@ -274,8 +278,10 @@
 				}
 			};
 			const res = document.getElementById('res')
-			res.innerHTML = ''
-			fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&release_date.gte=${yearlow}-01-01&release_date.lte=${yearhigh}-12-31&sort_by=popularity.desc&vote_average.gte=${ratinglow}&vote_average.lte=${ratinghigh}&with_genres=${genreDictionary[genre]}`, options)
+			if (!loadmore) {
+				res.innerHTML = ''
+			}
+			fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${b}&release_date.gte=${yearlow}-01-01&release_date.lte=${yearhigh}-12-31&sort_by=popularity.desc&vote_average.gte=${ratinglow}&vote_average.lte=${ratinghigh}&with_genres=${genreDictionary[genre]}`, options)
 				.then(response => response.json())
 				.then(response => {
 					response['results'].forEach(element => {
@@ -298,6 +304,11 @@
 					});
 				})
 				.catch(err => console.error(err));
+		}
+		var page = 1
+		function loadmorecontent() {
+			page++
+			getFilter(page)
 		}
 	</script>
 	{%endblock%}
