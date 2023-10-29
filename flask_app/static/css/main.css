@@ -1440,7 +1440,7 @@ ul {
   background-color: #222028;
   padding: 15px 30px 15px 20px;
 }
-.card__trailer {
+.card___trailer {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -1456,16 +1456,16 @@ ul {
   border: 2px solid #f9ab00;
   margin-top: 20px;
 }
-.card__trailer i {
+.card___trailer i {
   font-size: 22px;
   margin-right: 15px;
   transition: color 0.4s;
 }
-.card__trailer:hover {
+.card___trailer:hover {
   color: #fff;
   background-color: rgba(249,171,0,0.05);
 }
-.card__trailer:hover i {
+.card___trailer:hover i {
   color: #f9ab00;
 }
 .card--details {

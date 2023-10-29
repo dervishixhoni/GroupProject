@@ -27,12 +27,12 @@
 								<input type="hidden" class="title" name="title" value="{{movie['title']}}"/>
 								<input type="hidden" class="release_year" name="release_year" value="{{movie['release_date']}}"/>
 								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}"/>
-								<button class="card__trailer" type="submit">
+								<button class="card___trailer" type="submit">
 									<span>Add to favorites</span>
 								</button>
 							</form>
 							{% else %}
-							<a href="/remove/{{movie['id']}}" class="card__trailer">
+							<a href="/remove/{{movie['id']}}" class="card___trailer">
 								<span>Remove</span>
 							</a>
 							{% endif %}
