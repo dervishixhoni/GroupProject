@@ -38,8 +38,13 @@
 
 								<div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-genre"
 									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									{% if preset %}
+									<input id="genrefilter" type="button" value="{{preset}}">
+									<span></span>
+									{% else %}
 									<input id="genrefilter" type="button" value="Action">
 									<span></span>
+									{% endif %}
 								</div>
 
 								<ul class="filter__item-menu dropdown-menu scrollbar-dropdown">

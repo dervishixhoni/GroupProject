@@ -63,12 +63,18 @@
 				</div>
 			</div>
 			<!-- end content -->
+			{% if trailer != "notrailer" %}
 			<div class="col-12 col-xl-6 d-flex align-items-center">
 				<iframe id="player" width="560" height="315" src="https://www.youtube.com/embed/{{trailer}}"
 					title="YouTube video player" frameborder="0"
 					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 					allowfullscreen></iframe>
 			</div>
+			{% else %}
+			<div>
+
+			</div>
+			{%endif%}
 		</div>
 	</div>
 	<!-- end details content -->
@@ -76,8 +82,8 @@
 <!-- end details -->
 
 <!-- content -->
-<section class="content">
-	<div class="content__head">
+<section class="content" >
+	<div class="content__head" style="border-bottom: 0px;"	>
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
