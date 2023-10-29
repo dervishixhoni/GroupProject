@@ -2284,6 +2284,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   width: 100%;
   min-width: 500px;
   border-spacing: 0;
+  text-align: center;
 }
 .main__table thead {
   border-bottom: 1px solid #1a191f;
@@ -2320,7 +2321,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .main__table-text {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   font-size: 16px;
   color: #fff;
