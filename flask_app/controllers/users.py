@@ -276,21 +276,6 @@ def dashboard():
     )
 
 
-# View Logged User Profile
-@app.route("/profile")
-def profile():
-    if "user_id" not in session:
-        return redirect("/")
-
-    data = {"user_id": session["user_id"]}
-    loggedUser = User.get_user_by_id(data)
-    if loggedUser["isVerified"] == 0:
-        return redirect("/verify/email")
-    return render_template(
-        "profile.html", loggedUser = loggedUser,
-    )
-
-
 @app.route("/details/<int:id>")
 def details(id):
     if "user_id" not in session:
@@ -356,15 +341,8 @@ def search():
 def profile(id):
     if "user_id" not in session and session['user_id']!=id:
         return redirect('/')
-    datauser = {
-        'id' : session['user_id']
-    }
-    datalist = {
-        'user_id': session['user_id']
-    }
-
-    return render_template("profile.html", loggedUser = User.get_user_by_id(datauser), watchlist = Watchlist.get_User_Watchlist(datalist))
-
-
-
-        
+    data = {"user_id": session["user_id"]}
+    loggedUser = User.get_user_by_id(data)
+    if loggedUser["isVerified"] == 0:
+        return redirect("/verify/email")
+    return render_template("profile.html", loggedUser = loggedUser, watchlist = Watchlist.get_User_Watchlist(data))

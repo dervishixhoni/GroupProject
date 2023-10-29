@@ -1,4 +1,4 @@
-{%extends "base.html"%}
+{% extends "base.html" %}
 {% block content %}
 <!-- page title -->
 <section class="section section--first section--bg" data-bg="img/section/section.jpg">
@@ -32,12 +32,8 @@
 				<div class="col-12">
 					<div class="profile__content">
 						<div class="profile__user">
-							<div class="profile__avatar">
-								<img src="img/user.svg" alt="">
-							</div>
 							<div class="profile__meta">
-								<h3>John Doe</h3>
-								<span>HOTFLIX ID: 78123</span>
+								<h3>{{loggedUser['first_name']}} {{loggedUser['last_name']}}</h3>
 							</div>
 						</div>
 
@@ -94,19 +90,18 @@
 
 					<!-- dashbox -->
 					<div class="col-12 col-xl-6">
-						<div class="dashbox">
+						<div class="dashbox" style="margin: 20px auto;">
 							<div class="dashbox__title">
-								<h3><i class="icon ion-ios-film"></i> Movies for you</h3>
+								<h3><i class="icon ion-ios-film"></i>Your Watchlist</h3>
 
 								<div class="dashbox__wrap">
-									<a class="dashbox__refresh" href="#"><i class="icon ion-ios-refresh"></i></a>
-									<a class="dashbox__more" href="catalog.html">View All</a>
+									<a class="dashbox__more" href="/catalog">View All</a>
 								</div>
 							</div>
 
-							<div class="dashbox__table-wrap">
+							<div class="dashbox__table-wrap" >
+								{%if watchlist%}
 								<table class="main__table main__table--dash">
-									{% if movies %}
 									<thead>
 										<tr>
 											<th>TITLE</th>
@@ -142,7 +137,8 @@
 									</tbody>
 								</table>
 								{% else %}
-								There is nothing on your Watchlist.
+								There is nothing on your Watchlist
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -162,7 +158,7 @@
 									<div class="form__group">
 										<label class="form__label" for="firstname">First Name</label>
 										<input id="firstname" type="text" name="firstname" class="form__input"
-											placeholder="John">
+											value="{{loggedUser['first_name']}}">
 									</div>
 								</div>
 
@@ -170,7 +166,7 @@
 									<div class="form__group">
 										<label class="form__label" for="lastname">Last Name</label>
 										<input id="lastname" type="text" name="lastname" class="form__input"
-											placeholder="Doe">
+											value="{{loggedUser['last_name']}}">
 									</div>
 								</div>
 
@@ -178,7 +174,7 @@
 									<div class="form__group">
 										<label class="form__label" for="email">Email</label>
 										<input id="email" type="text" name="email" class="form__input"
-											placeholder="email@email.com">
+											value="{{loggedUser['email']}}">
 									</div>
 								</div>
 
@@ -233,4 +229,4 @@
 	</div>
 </div>
 <!-- end content -->
-{%endblock%}
+{% endblock %}
