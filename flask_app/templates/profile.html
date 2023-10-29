@@ -108,25 +108,22 @@
 									<tbody>
 										{% for movie in watchlist %}
 										<tr>
-											<form action="/delete/{{movie['id']}}" method="post">
-												<td>
-													<div class="main__table-text">
-														<a href="/details/{{movie['movie_id']}}">{{movie['title']}}</a>
-													</div>
-												</td>
-												<td>
-													<div class="main__table-text main__table-text--rate">
-														<i class="icon ion-ios-star"></i>{{movie['release_year']}}
-													</div>
-												</td>
-												<td>
-													<div class="main__table-text">{{movie['release_year']}}</div>
-												</td>
-												<td>
-													<button class="filter__btn" type="submit">Remove From
-														Watchlist</button>
-												</td>
-											</form>
+											<td class="main_table-text" style="color: white;text-align:center;">
+												<a style="color: white;text-align:center;" href="/details/{{movie['movie_id']}}">
+													{{movie['title']}}
+												</a>
+											</td>
+											<td class="main_table-text" style="color: white;text-align:center;">
+												{{movie['rating']}}
+											</td>
+											<td lass="main_table-text" style="color: white;text-align:center;">
+												{{movie['release_year']}}
+											</td>
+											<td class="main_table-text">
+												<a href="/remove/{{movie['movie_id']}}" class="header__sign-in">
+													<span>Remove</span>
+												</a>
+											</td>
 										</tr>
 										{%endfor%}
 									</tbody>
