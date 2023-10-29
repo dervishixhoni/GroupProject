@@ -74,7 +74,7 @@
 					<h2 class="content__title">You may also like...</h2>
 					<div class="row row--grid">
 						<!-- end section title -->
-						{% for rec in recommendations['results'] %}
+						{% for rec in recommendations['results'][:18] %}
 						<!-- card -->
 						<div class="col-6 col-sm-4 col-md-3 col-xl-2">
 							<div class="card">

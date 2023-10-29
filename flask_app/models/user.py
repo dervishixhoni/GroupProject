@@ -2,30 +2,32 @@ from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
 import re
 
-EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$")
 
 
 class User:
-    db_name = 'movies_db'
+    db_name = "movies_db"
 
     def __init__(self, data):
-        self.id = data['id']
-        self.first_name = data['first_name']
-        self.last_name = data['last_name']
-        self.email = data['email']
-        self.password = data['password']
-        self.admin = data['admin']
-        self.verificationCode = data['verificationCode']
-        self.isVerified = data['isVerified']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
+        self.id = data["id"]
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
+        self.email = data["email"]
+        self.password = data["password"]
+        self.admin = data["admin"]
+        self.verificationCode = data["verificationCode"]
+        self.isVerified = data["isVerified"]
+        self.created_at = data["created_at"]
+        self.updated_at = data["updated_at"]
 
     # CREATE User
     @classmethod
     def save(cls, data):
-        query = ("INSERT INTO users (first_name, last_name, email, password, isVerified, "
-                 "verificationCode, admin) VALUES ( %(first_name)s, %(last_name)s, %(email)s, "
-                 "%(password)s, %(isVerified)s, %(verificationCode)s, 0);")
+        query = (
+            "INSERT INTO users (first_name, last_name, email, password, isVerified, "
+            "verificationCode, admin) VALUES ( %(first_name)s, %(last_name)s, %(email)s, "
+            "%(password)s, %(isVerified)s, %(verificationCode)s, 0);"
+        )
         return connectToMySQL(cls.db_name).query_db(query, data)
 
     # Get User By ID
@@ -37,7 +39,6 @@ class User:
             return results[0]
         return False
 
-
     # Get User By Email
     @classmethod
     def get_user_by_email(cls, data):
@@ -46,7 +47,6 @@ class User:
         if results:
             return results[0]
         return False
-
 
     # Insert Verification Code
     @classmethod
@@ -63,8 +63,10 @@ class User:
     # Update User
     @classmethod
     def update(cls, data):
-        query = ("UPDATE users SET first_name = %(first_name)s, last_name = %(last_name)s WHERE "
-                 "users.id = %(user_id)s;")
+        query = (
+            "UPDATE users SET first_name = %(first_name)s, last_name = %(last_name)s WHERE "
+            "users.id = %(user_id)s;"
+        )
         return connectToMySQL(cls.db_name).query_db(query, data)
 
     # DELETE User
@@ -73,25 +75,24 @@ class User:
         query = "DELETE FROM users WHERE users.id = %(user_id)s;"
         return connectToMySQL(cls.db_name).query_db(query, data)
 
-
     @staticmethod
     def validate_user(user):
         is_valid = True
 
-        if len(user['first_name']) < 2:
-            flash('First name should be more than 2 characters!', 'firstNameRegister')
+        if len(user["first_name"]) < 2:
+            flash("First name should be more than 2 characters!", "firstNameRegister")
             is_valid = False
-        if len(user['last_name']) < 2:
-            flash('Last name should be more than 2 characters!', 'lastNameRegister')
+        if len(user["last_name"]) < 2:
+            flash("Last name should be more than 2 characters!", "lastNameRegister")
             is_valid = False
-        if not EMAIL_REGEX.match(user['email']):
-            flash("Invalid email address!", 'emailRegister')
+        if not EMAIL_REGEX.match(user["email"]):
+            flash("Invalid email address!", "emailRegister")
             is_valid = False
-        if len(user['password']) < 8:
-            flash('Password should be more then 8 characters!', 'passwordRegister')
+        if len(user["password"]) < 8:
+            flash("Password should be more then 8 characters!", "passwordRegister")
             is_valid = False
-        if user['password'] != user['confirmPassword']:
-            flash('Passwords do not match!', 'confirmPasswordRegister')
+        if user["password"] != user["confirmPassword"]:
+            flash("Passwords do not match!", "confirmPasswordRegister")
             is_valid = False
         return is_valid
 
@@ -99,12 +100,10 @@ class User:
     def validate_user_profile(user):
         valid = True
 
-        if len(user['first_name']) < 2:
-            flash('First name should be more than 2 characters!', 'firstNameRegister')
+        if len(user["first_name"]) < 2:
+            flash("First name should be more than 2 characters!", "firstNameRegister")
             is_valid = False
-        if len(user['last_name']) < 2:
-            flash('Last name should be more than 2 characters!', 'lastNameRegister')
+        if len(user["last_name"]) < 2:
+            flash("Last name should be more than 2 characters!", "lastNameRegister")
             is_valid = False
         return valid
-
-
