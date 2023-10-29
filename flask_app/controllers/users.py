@@ -286,7 +286,7 @@ def profile():
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
     return render_template(
-        "profile.html",
+        "profile.html", loggedUser = loggedUser,
     )
 
 
@@ -325,3 +325,32 @@ def catalog():
     url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
     response = requests.get(url, headers=headers)
     return render_template('catalog.html',base=response.json()['results'][:18],genredict=genredict)
+
+
+@app.route("/search", methods=['POST'])
+def search():
+    if "user_id" not in session:
+        return redirect("/")
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+    }
+    
+    search = request.form["keyword"]
+    
+    url = f"https://api.themoviedb.org/3/search/movie?query={search}&include_adult=false&language=en-US&page=1"
+    
+    response = requests.get(url, headers=headers)
+
+    data = response.json()
+    results=data.get("results", [])
+
+    if response.status_code == 200:
+        print(results)
+        return render_template("result.html", movies=results, genredict=genredict)
+    else:
+        return redirect(request.referrer)
+
+
+
+        
