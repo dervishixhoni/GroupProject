@@ -17,25 +17,25 @@ from .env import ADMINEMAIL
 from .env import PASSWORD
 
 genredict = {
-    28: 'Action',
-    12: 'Adventure',
-    16: 'Animation',
-    35: 'Comedy',
-    80: 'Crime',
-    99: 'Documentary',
-    18: 'Drama',
-    10751: 'Family',
-    14: 'Fantasy',
-    36: 'History',
-    27: 'Horror',
-    10402: 'Music',
-    9648: 'Mystery',
-    10749: 'Romance',
-    878: 'Science Fiction',
-    10770: 'TV Movie',
-    53: 'Thriller',
-    10752: 'War',
-    37: 'Western'
+    28: "Action",
+    12: "Adventure",
+    16: "Animation",
+    35: "Comedy",
+    80: "Crime",
+    99: "Documentary",
+    18: "Drama",
+    10751: "Family",
+    14: "Fantasy",
+    36: "History",
+    27: "Horror",
+    10402: "Music",
+    9648: "Mystery",
+    10749: "Romance",
+    878: "Science Fiction",
+    10770: "TV Movie",
+    53: "Thriller",
+    10752: "War",
+    37: "Western",
 }
 
 
@@ -219,18 +219,19 @@ def login():
 
     return redirect("/verify/email")
 
+
 # Update Profile Form
 @app.route("/editprofile", methods=["POST"])
 def editProfile():
     if "user_id" in session:
         if not User.validate_user_profile(request.form):
-            flash("You have some errors!")  
+            flash("You have some errors!")
             return redirect(request.referrer)
         data = {
             "user_id": session["user_id"],
             "first_name": request.form["first_name"],
             "last_name": request.form["last_name"],
-            'email': request.form['email']
+            "email": request.form["email"],
         }
         loggedUser = User.get_user_by_id(data)
         if loggedUser["isVerified"] == 0:
@@ -239,25 +240,26 @@ def editProfile():
         return redirect(request.referrer)
     return redirect(request.referrer)
 
-@app.route('/editpassword',methods=['POST'])
+
+@app.route("/editpassword", methods=["POST"])
 def editPassword():
-    if'user_id' not in session:
-        return redirect('/')
+    if "user_id" not in session:
+        return redirect("/")
+    data = {"user_id": session["user_id"]}
+    if not bcrypt.check_password_hash(
+        request.form["oldpass"], User.get_user_by_id(data)["password"]
+    ):
+        flash("Old Password does not match!", "oldpassword")
+        return redirect(request.referrer)
+    if len(request.form["newpass"]) < 8:
+        flash("New Password should be longer than 8 Charachters", "newpassword")
+        return redirect(request.referrer)
+    if request.form["confimpass"] != request.form["newpass"]:
+        flash("Confirm Password should match New Password", "confirmpassword")
+        return redirect(request.referrer)
     data = {
-        'user_id': session['user_id']
-    }
-    if not bcrypt.check_password_hash(request.form['oldpass'],User.get_user_by_id(data)['password']):
-        flash('Old Password does not match!','oldpassword')
-        return redirect(request.referrer)
-    if len(request.form['newpass'])<8:
-        flash('New Password should be longer than 8 Charachters','newpassword')
-        return redirect(request.referrer)
-    if request.form['confimpass']!=request.form['newpass']:
-        flash('Confirm Password should match New Password',"confirmpassword")
-        return redirect(request.referrer)
-    data = {
-        'password' : bcrypt.generate_password_hash(request.form['newpass']),
-        'id': session['user_id']
+        "password": bcrypt.generate_password_hash(request.form["newpass"]),
+        "id": session["user_id"],
     }
     User.editpassword(data)
     return redirect(request.referrer)
@@ -274,14 +276,22 @@ def dashboard():
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
     url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
-
+    todayurl = "https://api.themoviedb.org/3/trending/movie/day?language=en-US"
+    thisweekurl = "https://api.themoviedb.org/3/trending/movie/week?language=en-US"
     headers = {
         "accept": "application/json",
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
     }
     response = requests.get(url, headers=headers)
+    todayresponse = requests.get(todayurl,headers=headers)
+    thisweekresponse = requests.get(thisweekurl,headers=headers)
     return render_template(
-        "index.html", loggedUser=loggedUser, movies=response.json()["results"],genredict=genredict
+        "index.html",
+        loggedUser=loggedUser,
+        movies=response.json()["results"],
+        genredict=genredict,
+        todaytrending=todayresponse.json()['results'][:18],
+        thisweektrending=thisweekresponse.json()['results'][:18],
     )
 
 
@@ -297,19 +307,26 @@ def details(id):
     response = requests.get(detailurl, headers=headers)
     videourl = f"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US"
     videoresponse = requests.get(videourl, headers=headers)
-    if videoresponse !=200 :
-        for r in videoresponse.json()['results']:
-            if r['type'] == 'Trailer' and r['site'] == 'YouTube':
-                trailer_url = r['key']
-    genres = ''
-    for i in range(len(response.json()['genres'])-1):
-        genres += str(response.json()['genres'][i]['id'])+'|'
-    genres+=str(response.json()['genres'][len(response.json()['genres'])-1]['id'])
+    if videoresponse != 200:
+        for r in videoresponse.json()["results"]:
+            if r["type"] == "Trailer" and r["site"] == "YouTube":
+                trailer_url = r["key"]
+    genres = ""
+    for i in range(len(response.json()["genres"]) - 1):
+        genres += str(response.json()["genres"][i]["id"]) + "|"
+    genres += str(response.json()["genres"][len(response.json()["genres"]) - 1]["id"])
     url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={genres}"
     recresponse = requests.get(url, headers=headers)
-    return render_template("details.html", movie=response.json(),recommendations = recresponse.json(),trailer=trailer_url,genredict = genredict)
+    return render_template(
+        "details.html",
+        movie=response.json(),
+        recommendations=recresponse.json(),
+        trailer=trailer_url,
+        genredict=genredict,
+    )
 
-@app.route('/catalog')
+
+@app.route("/catalog")
 def catalog():
     if "user_id" not in session:
         return redirect("/")
@@ -319,10 +336,12 @@ def catalog():
     }
     url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
     response = requests.get(url, headers=headers)
-    return render_template('catalog.html',base=response.json()['results'][:18],genredict=genredict)
+    return render_template(
+        "catalog.html", base=response.json()["results"][:18], genredict=genredict
+    )
 
 
-@app.route("/search", methods=['POST'])
+@app.route("/search", methods=["POST"])
 def search():
     if "user_id" not in session:
         return redirect("/")
@@ -330,28 +349,33 @@ def search():
         "accept": "application/json",
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
     }
-    
+
     search = request.form["keyword"]
-    
+
     url = f"https://api.themoviedb.org/3/search/movie?query={search}&include_adult=false&language=en-US&page=1"
-    
+
     response = requests.get(url, headers=headers)
 
     data = response.json()
-    results=data.get("results", [])
+    results = data.get("results", [])
 
     if response.status_code == 200:
         print(results)
         return render_template("result.html", movies=results, genredict=genredict)
     else:
         return redirect(request.referrer)
-    
-@app.route('/profile/<int:id>')
+
+
+@app.route("/profile/<int:id>")
 def profile(id):
-    if "user_id" not in session and session['user_id']!=id:
-        return redirect('/')
+    if "user_id" not in session and session["user_id"] != id:
+        return redirect("/")
     data = {"user_id": session["user_id"]}
     loggedUser = User.get_user_by_id(data)
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
-    return render_template("profile.html", loggedUser = loggedUser, watchlist = Watchlist.get_User_Watchlist(data))
+    return render_template(
+        "profile.html",
+        loggedUser=loggedUser,
+        watchlist=Watchlist.get_User_Watchlist(data),
+    )
