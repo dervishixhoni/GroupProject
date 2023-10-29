@@ -308,6 +308,7 @@ def details(id):
     response = requests.get(detailurl, headers=headers)
     videourl = f"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US"
     videoresponse = requests.get(videourl, headers=headers)
+    trailer_url = "notrailer"
     if videoresponse != 200:
         for r in videoresponse.json()["results"]:
             if r["type"] == "Trailer" and r["site"] == "YouTube":
@@ -323,7 +324,8 @@ def details(id):
         movie=response.json(),
         recommendations=recresponse.json(),
         trailer=trailer_url,
-        genredict=genredict, watchlist=Watchlist.get_User_Watchlist_movie_id(data),
+        genredict=genredict,
+        watchlist=Watchlist.get_User_Watchlist_movie_id(data),
         loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
     )
 
@@ -343,6 +345,25 @@ def catalog():
         base=response.json()["results"][:18],
         genredict=genredict,
         loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
+    )
+
+
+@app.route("/catalog/<int:id>")
+def catalogwithgenre(id):
+    if "user_id" not in session:
+        return redirect("/")
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+    }
+    url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={id}"
+    response = requests.get(url, headers=headers)
+    return render_template(
+        "catalog.html",
+        base=response.json()["results"][:18],
+        genredict=genredict,
+        loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
+        preset = genredict[id]  
     )
 
 
@@ -386,29 +407,37 @@ def profile(id):
     print(Watchlist.get_User_Watchlist_movie_id(data))
     if loggedUser["isVerified"] == 0:
         return redirect("/verify/email")
-    return render_template("profile.html", loggedUser = loggedUser, watchlist = Watchlist.get_User_Watchlist(data))
+    return render_template(
+        "profile.html",
+        loggedUser=loggedUser,
+        watchlist=Watchlist.get_User_Watchlist(data),
+    )
 
 
-@app.route('/watch/<int:id>', methods=['POST'])
+@app.route("/watch/<int:id>", methods=["POST"])
 def watchlist(id):
     if "user_id" not in session:
-        return redirect('/')
-    data = {"user_id": session["user_id"],
-            "movie_id": id,
-            "title": request.form['title'],
-            "release_year": request.form['release_year'],
-            "rating": request.form['rating']}
+        return redirect("/")
+    data = {
+        "user_id": session["user_id"],
+        "movie_id": id,
+        "title": request.form["title"],
+        "release_year": request.form["release_year"],
+        "rating": request.form["rating"],
+    }
     loggedUser = User.get_user_by_id(data)
     Watchlist.save(data)
     return redirect(request.referrer)
 
 
-@app.route('/remove/<int:id>')
+@app.route("/remove/<int:id>")
 def remove(id):
     if "user_id" not in session:
-        return redirect('/')
-    data = {"user_id": session["user_id"],
-            "movie_id": id,}
+        return redirect("/")
+    data = {
+        "user_id": session["user_id"],
+        "movie_id": id,
+    }
     loggedUser = User.get_user_by_id(data)
     Watchlist.delete(data)
     return redirect(request.referrer)

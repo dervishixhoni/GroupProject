@@ -125,6 +125,7 @@ $(document).ready(function () {
 
 	$('.content__mobile-tabs-menu li').on('click', function() {
 		var text = $(this).text();
+		text = text.replace(/\s/g, '');
 		var item = $(this);
 		var id = item.closest('.content__mobile-tabs').attr('id');
 		$('#'+id).find('.content__mobile-tabs-btn input').val(text);
@@ -493,12 +494,12 @@ $(document).ready(function () {
 			var firstSlider = document.getElementById('filter__years');
 			noUiSlider.create(firstSlider, {
 				range: {
-					'min': 2000,
-					'max': 2021
+					'min': 1950,
+					'max': 2023
 				},
 				step: 1,
 				connect: true,
-				start: [2007, 2019],
+				start: [2005, 2020],
 				format: wNumb({
 					decimals: 0,
 				})
@@ -528,7 +529,7 @@ $(document).ready(function () {
 				},
 				step: 0.1,
 				connect: true,
-				start: [3.1, 8.6],
+				start: [3.5, 10],
 				format: wNumb({
 					decimals: 1,
 				})
