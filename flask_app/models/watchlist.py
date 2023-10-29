@@ -14,11 +14,12 @@ class Watchlist:
         self.release_year = data["release_year"]
         self.rating = data["rating"]
         self.user_id = data["user_id"]
+        self.movie_id = data['movie_id']
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
     @classmethod
     def save(cls, data):
-        query = "INSERT INTO watchlists (title, release_year, rating, user_id) VALUES ( %(title)s, %(release_year)s, %(rating)s, %(user_id)s);"
+        query = "INSERT INTO watchlists (title, release_year, rating, user_id,movie_id) VALUES ( %(title)s, %(release_year)s, %(rating)s, %(user_id)s, %(movie_id)s);"
         return connectToMySQL(cls.db_name).query_db(query, data)
     @classmethod
     def delete(cls, data):

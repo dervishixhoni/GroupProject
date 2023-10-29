@@ -350,6 +350,12 @@ def search():
         return render_template("result.html", movies=results, genredict=genredict)
     else:
         return redirect(request.referrer)
+    
+@app.route('/profile/<int:id>')
+def profile(id):
+    if "user_id" not in session and session['user_id']!=id:
+        return redirect('/')
+    
 
 
 
