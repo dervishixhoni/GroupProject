@@ -283,15 +283,15 @@ def dashboard():
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
     }
     response = requests.get(url, headers=headers)
-    todayresponse = requests.get(todayurl,headers=headers)
-    thisweekresponse = requests.get(thisweekurl,headers=headers)
+    todayresponse = requests.get(todayurl, headers=headers)
+    thisweekresponse = requests.get(thisweekurl, headers=headers)
     return render_template(
         "index.html",
         loggedUser=loggedUser,
         movies=response.json()["results"],
         genredict=genredict,
-        todaytrending=todayresponse.json()['results'][:18],
-        thisweektrending=thisweekresponse.json()['results'][:18],
+        todaytrending=todayresponse.json()["results"][:18],
+        thisweektrending=thisweekresponse.json()["results"][:18],
     )
 
 
@@ -323,6 +323,7 @@ def details(id):
         recommendations=recresponse.json(),
         trailer=trailer_url,
         genredict=genredict,
+        loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
     )
 
 
@@ -337,7 +338,10 @@ def catalog():
     url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
     response = requests.get(url, headers=headers)
     return render_template(
-        "catalog.html", base=response.json()["results"][:18], genredict=genredict
+        "catalog.html",
+        base=response.json()["results"][:18],
+        genredict=genredict,
+        loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
     )
 
 
@@ -361,7 +365,12 @@ def search():
 
     if response.status_code == 200:
         print(results)
-        return render_template("result.html", movies=results, genredict=genredict)
+        return render_template(
+            "result.html",
+            movies=results,
+            genredict=genredict,
+            loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
+        )
     else:
         return redirect(request.referrer)
 
