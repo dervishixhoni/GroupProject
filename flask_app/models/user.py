@@ -1,5 +1,5 @@
 from flask_app.config.mysqlconnection import connectToMySQL
-from flask import flash
+from flask import flash, request
 import re
 
 EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$")
@@ -64,7 +64,7 @@ class User:
     @classmethod
     def update(cls, data):
         query = (
-            "UPDATE users SET first_name = %(first_name)s, last_name = %(last_name)s WHERE "
+            "UPDATE users SET first_name = %(first_name)s, last_name = %(last_name)s, email = %(email)s WHERE "
             "users.id = %(user_id)s;"
         )
         return connectToMySQL(cls.db_name).query_db(query, data)
@@ -106,4 +106,18 @@ class User:
         if len(user["last_name"]) < 2:
             flash("Last name should be more than 2 characters!", "lastNameRegister")
             is_valid = False
+        if not EMAIL_REGEX.match(user["email"]):
+            flash("Invalid email address!", "emailRegister")
+            is_valid = False
+        data = {
+            'email' : request.form['email']
+        }
+        if User.get_user_by_email(data):
+            flash('Email already exists','emailexists')
+            is_valid = False
         return valid
+    
+    @classmethod
+    def editpassword(cls,data):
+        query = "update users set password = %(password)s where id = %(id)s"
+        return connectToMySQL(cls.db_name).query_db(query,data)

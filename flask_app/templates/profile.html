@@ -70,11 +70,10 @@
 							</div>
 						</div>
 						<!-- end content mobile tabs nav -->
-
-						<button class="profile__logout" type="button">
+						<a class="profile__logout" href="/catalog">
 							<i class="icon ion-ios-log-out"></i>
-							<span>Logout</span>
-						</button>
+							<span>View More</span>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -89,17 +88,13 @@
 				<div class="row row--grid">
 
 					<!-- dashbox -->
-					<div class="col-12 col-xl-6">
-						<div class="dashbox" style="margin: 20px auto;">
+					<div style="margin: auto;">
+						<div class="dashbox">
 							<div class="dashbox__title">
 								<h3><i class="icon ion-ios-film"></i>Your Watchlist</h3>
-
-								<div class="dashbox__wrap">
-									<a class="dashbox__more" href="/catalog">View All</a>
-								</div>
 							</div>
 
-							<div class="dashbox__table-wrap" >
+							<div class="dashbox__table-wrap">
 								{%if watchlist%}
 								<table class="main__table main__table--dash">
 									<thead>
@@ -149,7 +144,7 @@
 				<div class="row">
 					<!-- details form -->
 					<div class="col-12 col-lg-6">
-						<form action="#" class="form form--profile">
+						<form action="/editprofile" method="post" class="form form--profile">
 							<div class="row row--form">
 								<div class="col-12">
 									<h4 class="form__title">Profile details</h4>
@@ -157,7 +152,7 @@
 								<div class="col-12 col-md-6 col-lg-12 col-xl-6">
 									<div class="form__group">
 										<label class="form__label" for="firstname">First Name</label>
-										<input id="firstname" type="text" name="firstname" class="form__input"
+										<input id="firstname" type="text" name="first_name" class="form__input"
 											value="{{loggedUser['first_name']}}">
 									</div>
 								</div>
@@ -165,7 +160,7 @@
 								<div class="col-12 col-md-6 col-lg-12 col-xl-6">
 									<div class="form__group">
 										<label class="form__label" for="lastname">Last Name</label>
-										<input id="lastname" type="text" name="lastname" class="form__input"
+										<input id="lastname" type="text" name="last_name" class="form__input"
 											value="{{loggedUser['last_name']}}">
 									</div>
 								</div>
@@ -179,7 +174,7 @@
 								</div>
 
 								<div class="col-12">
-									<button class="form__btn" type="button">Save</button>
+									<button class="form__btn" type="submit">Save</button>
 								</div>
 							</div>
 						</form>
@@ -188,7 +183,7 @@
 
 					<!-- password form -->
 					<div class="col-12 col-lg-6">
-						<form action="#" class="form form--profile">
+						<form action="/editpassword" method="post" class="form form--profile">
 							<div class="row row--form">
 								<div class="col-12">
 									<h4 class="form__title">Change password</h4>
@@ -216,7 +211,7 @@
 								</div>
 
 								<div class="col-12">
-									<button class="form__btn" type="button">Change</button>
+									<button class="form__btn" type="submit">Change</button>
 								</div>
 							</div>
 						</form>

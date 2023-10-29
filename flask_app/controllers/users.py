@@ -219,38 +219,47 @@ def login():
 
     return redirect("/verify/email")
 
-
-# Edit Post Form Route
-@app.route("/edit/profile")
-def edit_profile():
-    if "user_id" in session:
-        data = {
-            "user_id": session["user_id"],
-        }
-        loggedUser = User.get_user_by_id(data)
-        if loggedUser["isVerified"] == 0:
-            return redirect("/verify/email")
-        return render_template("editProfile.html", loggedUser=loggedUser)
-    return redirect("/profile")
-
-
 # Update Profile Form
-@app.route("/editProfile", methods=["POST"])
+@app.route("/editprofile", methods=["POST"])
 def editProfile():
     if "user_id" in session:
         if not User.validate_user_profile(request.form):
-            flash("You have some errors!")
+            flash("You have some errors!")  
             return redirect(request.referrer)
         data = {
             "user_id": session["user_id"],
             "first_name": request.form["first_name"],
             "last_name": request.form["last_name"],
+            'email': request.form['email']
         }
         loggedUser = User.get_user_by_id(data)
         if loggedUser["isVerified"] == 0:
             return redirect("/verify/email")
         User.update(data)
         return redirect(request.referrer)
+    return redirect(request.referrer)
+
+@app.route('/editpassword',methods=['POST'])
+def editPassword():
+    if'user_id' not in session:
+        return redirect('/')
+    data = {
+        'user_id': session['user_id']
+    }
+    if not bcrypt.check_password_hash(request.form['oldpass'],User.get_user_by_id(data)['password']):
+        flash('Old Password does not match!','oldpassword')
+        return redirect(request.referrer)
+    if len(request.form['newpass'])<8:
+        flash('New Password should be longer than 8 Charachters','newpassword')
+        return redirect(request.referrer)
+    if request.form['confimpass']!=request.form['newpass']:
+        flash('Confirm Password should match New Password',"confirmpassword")
+        return redirect(request.referrer)
+    data = {
+        'password' : bcrypt.generate_password_hash(request.form['newpass']),
+        'id': session['user_id']
+    }
+    User.editpassword(data)
     return redirect(request.referrer)
 
 
