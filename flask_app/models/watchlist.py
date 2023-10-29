@@ -25,3 +25,12 @@ class Watchlist:
     def delete(cls, data):
         query = "DELETE FROM watchlists WHERE id = %(id)s;"
         return connectToMySQL(cls.db_name).query_db(query, data)
+    @classmethod
+    def get_User_Watchlist(cls,data):
+        query = "Select * from watchlists where user_id = %(user_id)s"
+        results = connectToMySQL(cls.db_name).query_db(query,data)
+        listtowatch = []
+        if results:
+            for item in results:
+                listtowatch.append(item)
+        return listtowatch

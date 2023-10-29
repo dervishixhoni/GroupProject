@@ -4,6 +4,7 @@ import random
 import smtplib
 from flask_app import app
 from flask_app.models.user import User
+from flask_app.models.watchlist import Watchlist
 from flask_app.config.mysqlconnection import connectToMySQL
 import requests
 
@@ -355,7 +356,14 @@ def search():
 def profile(id):
     if "user_id" not in session and session['user_id']!=id:
         return redirect('/')
-    
+    datauser = {
+        'id' : session['user_id']
+    }
+    datalist = {
+        'user_id': session['user_id']
+    }
+
+    return render_template("profile.html", loggedUser = User.get_user_by_id(datauser), watchlist = Watchlist.get_User_Watchlist(datalist))
 
 
 
