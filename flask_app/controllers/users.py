@@ -389,9 +389,10 @@ def search():
         print(results)
         return render_template(
             "result.html",
-            movies=results,
+            movies=results[:18],
             genredict=genredict,
             loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
+            search = search
         )
     else:
         return redirect(request.referrer)
