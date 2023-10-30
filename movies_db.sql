@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS `movies_db`.`watchlists` (
   `movie_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
-  INDEX `fk_posts_users_idx` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `fk_posts_users`
+  INDEX `fk_watchlists_users_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_watchlists_users`
     FOREIGN KEY (`user_id`)
     REFERENCES `movies_db`.`users` (`id`)
     ON DELETE CASCADE)
