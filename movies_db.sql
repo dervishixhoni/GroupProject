@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema movies_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `movies_db` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `movies_db` DEFAULT CHARACTER SET utf8mb3 ;
 USE `movies_db` ;
 
 -- -----------------------------------------------------
@@ -26,11 +26,36 @@ CREATE TABLE IF NOT EXISTS `movies_db`.`users` (
   `admin` INT NOT NULL,
   `verificationCode` VARCHAR(45) NOT NULL,
   `isVerified` INT NOT NULL,
-  `created_at` DATETIME NOT NULL DEFAULT NOW(),
-  `updated_at` DATETIME NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `movies_db`.`watchlists`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `movies_db`.`watchlists` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` TEXT NOT NULL,
+  `rating` FLOAT NOT NULL,
+  `release_year` DATE NOT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_id` INT NOT NULL,
+  `movie_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
+  INDEX `fk_posts_users_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_posts_users`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `movies_db`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
