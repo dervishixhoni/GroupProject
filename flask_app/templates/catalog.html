@@ -151,7 +151,7 @@
 				<!-- end card -->
 				{% endfor %}
 			</div>
-			<div class="row" style="margin: auto;" >
+			<div class="row" style="margin: auto;">
 				<!-- more -->
 				<div class="col-12">
 					<button onclick="loadmorecontent()" class="catalog__more" type="button">Load more</button>
@@ -237,11 +237,11 @@
 	</section>
 	end section -->
 	<script>
-		function getFilter(b=1) {
-			if (b==1){
+		function getFilter(b = 1) {
+			if (b == 1) {
 				loadmore = false
 			}
-			else{
+			else {
 				loadmore = true
 			}
 			const genreDictionary = {
@@ -265,6 +265,27 @@
 				"War": 10752,
 				"Western": 37,
 			};
+			const genredict = {
+				28: "Action",
+				12: "Adventure",
+				16: "Animation",
+				35: "Comedy",
+				80: "Crime",
+				99: "Documentary",
+				18: "Drama",
+				10751: "Family",
+				14: "Fantasy",
+				36: "History",
+				27: "Horror",
+				10402: "Music",
+				9648: "Mystery",
+				10749: "Romance",
+				878: "Science Fiction",
+				10770: "TV Movie",
+				53: "Thriller",
+				10752: "War",
+				37: "Western",
+			}
 			const genre = document.getElementById("genrefilter").value;
 			const ratinglow = document.getElementById("filter__imbd-start").innerText
 			const ratinghigh = document.getElementById("filter__imbd-end").innerText
@@ -280,11 +301,14 @@
 			const res = document.getElementById('res')
 			if (!loadmore) {
 				res.innerHTML = ''
+				b = 1
+				page = 1
 			}
+			console.log(page);
 			fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${b}&release_date.gte=${yearlow}-01-01&release_date.lte=${yearhigh}-12-31&sort_by=popularity.desc&vote_average.gte=${ratinglow}&vote_average.lte=${ratinghigh}&with_genres=${genreDictionary[genre]}`, options)
 				.then(response => response.json())
 				.then(response => {
-					response['results'].forEach(element => {
+					response['results'].slice(0, 18).forEach(element => {
 						res.innerHTML += `
 						<div class="col-6 col-sm-4 col-md-3 col-xl-2">
 							<div class="card">
@@ -297,6 +321,18 @@
 								</div>
 								<div class="card__content">
 									<h3 class="card__title"><a href="/details/${element['id']}">${element['title']}</a></h3>
+									<span class="card__category">
+									${(() => {
+								array = element['genre_ids']
+								output = ""
+								array.forEach(element => {
+									output += `
+												<a href="/catalog/${element}">${genredict[element]}</a>
+														`
+								});
+								return output
+							})()}
+									</span>
 								</div>
 							</div>
 						</div>
