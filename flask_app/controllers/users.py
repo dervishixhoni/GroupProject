@@ -3,12 +3,12 @@ import math
 import random
 import smtplib
 from flask_app import app
-from flask_app.models.user import User
+from flask_app.models.user import EMAIL_REGEX, User
 from flask_app.models.watchlist import Watchlist
 from flask_app.config.mysqlconnection import connectToMySQL
 import requests
 
-from flask import render_template, redirect, session, request, flash
+from flask import jsonify, render_template, redirect, session, request, flash
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
@@ -72,14 +72,41 @@ def registerPage():
 def register():
     if "user_id" in session:
         return redirect("/")
-
+    errors = {}
     if User.get_user_by_email(request.form):
-        flash("This email already exists", "emailRegister")
-        return redirect(request.referrer)
+        errors["email"] = "This email already exists"
 
-    if not User.validate_user(request.form):
-        flash("You have some errors! Fix them to sign Up", "registrationFailed")
-        return redirect(request.referrer)
+    if not EMAIL_REGEX.match(request.form["email"]):
+        errors["email"] = "Invalid email address!"
+
+    if not request.form["email"]:
+        errors["email"] = "Email address is required."
+
+    if len(request.form["last_name"]) < 2:
+        errors["last_name"] = "Last name should be more than 2 characters!"
+
+    if not request.form["last_name"]:
+        errors["last_name"] = "Last Name is required."
+
+    if len(request.form["password"]) < 8:
+        errors["password"] = "Password must be longer than 8 characters"
+
+    if not request.form["password"]:
+        errors["password"] = "Password is required."
+
+    if len(request.form["first_name"]) < 2:
+        errors["first_name"] = "First name should be more than 2 characters!"
+
+    if not request.form["first_name"]:
+        errors["first_name"] = "First Name is required."
+
+    if request.form["password"] != request.form["confirmpass"]:
+        errors["confirmpass"] = "Passwords do not match!"
+
+    if not request.form["confirmpass"]:
+        errors["confirmpass"] = "Confirm Password is required."
+    if errors:
+        return jsonify({"valid": False, "errors": errors})
     string = "0123456789ABCDEFGHIJKELNOPKQSTUV"
     vCode = ""
     length = len(string)
@@ -116,12 +143,8 @@ def register():
     server.quit()
 
     user = User.get_user_by_email(data)
-    if user:
-        session["user_id"] = user["id"]
-        return redirect("/verify/email")
-    else:
-        flash("User not found", "userNotFound")
-        return redirect(request.referrer)
+    session["user_id"] = user["id"]
+    return jsonify({"valid": True, "path": "/verify/email"})#here
 
 
 # Verify Email Route
@@ -202,22 +225,28 @@ def loginPage():
 def login():
     if "user_id" in session:
         return redirect("/")
-    if not User.get_user_by_email(request.form):
-        flash(
-            "This email doesnt appear to be in our system! Try another one!",
-            "emailLogin",
-        )
-        return redirect(request.referrer)
+    errors = {}
 
+    if not User.get_user_by_email(request.form):
+        errors["email"] = "This email doesnt appear to be in our system!"
+
+    if not request.form["email"]:
+        errors["email"] = "Email address is required."
     user = User.get_user_by_email(request.form)
     if user:
         if not bcrypt.check_password_hash(user["password"], request.form["password"]):
-            flash("Wrong Password", "passwordLogin")
-            return redirect(request.referrer)
+            errors["password"] = "Wrong Password"
+
+    if not request.form["password"]:
+        errors["password"] = "Password is required."
+
+    # If the form is invalid, return a list of validation errors.
+    if errors:
+        return jsonify({"valid": False, "errors": errors})
 
     session["user_id"] = user["id"]
 
-    return redirect("/verify/email")
+    return jsonify({"valid": True, "path": "/verify/email"})
 
 
 # Update Profile Form

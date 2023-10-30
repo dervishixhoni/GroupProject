@@ -3883,3 +3883,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 .mCS-custom-bar3.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar {
   background-color: #f9ab00;
 }
+
+.is-invalid::placeholder {
+  color: red;
+  opacity: 1; /* Firefox */
+}
+input:focus::placeholder {
+  color: transparent;
+}

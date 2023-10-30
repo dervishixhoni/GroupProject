@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-reboot.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-grid.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
@@ -28,7 +30,7 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="Dmitry Volkov">
-    <title>HotFlix – Online Movies, TV Shows & Cinema HTML Template</title>
+    <title>Online Movies, TV Shows & Cinema HTML Template</title>
 </head>
 
 <body class="body">
@@ -41,7 +43,7 @@
                         <!-- registration form -->
                         <form action="/activate/account" method="post" class="sign__form">
                             <div class="mb-3">
-                                <h1>Verification Code</h1>
+                                <h1 class="my-5 text-white" style="text-wrap: nowrap;" >Email Verification</h1>
                                 <div class="d-flex sign__group">
                                     <input type="text" class="sign__input mx-1 p-2" id="verification-code-1"
                                         name="verification_code[]" maxlength="1" autofocus>
@@ -58,7 +60,7 @@
                                     <input type="hidden" name="verificationCode" value="" id="result">
                                 </div>
                             </div>
-                            <button type="submit" onclick="concat()" class="btn btn-primary">Verify
+                            <button type="submit" onclick="concat()" class="catalog__more">Verify
                                 Email</button>
                         </form>
                         <!-- registration form -->
@@ -68,32 +70,33 @@
         </div>
     </div>
     <script>
+        const inputFields = document.querySelectorAll('input[type="text"]');
         inputFields.forEach(inputField => {
-                inputField.addEventListener('input', () => {
-                    // Get the next input field in the form.
-                    const nextInputField = inputField.nextElementSibling;
+            inputField.addEventListener('input', () => {
+                // Get the next input field in the form.
+                const nextInputField = inputField.nextElementSibling;
 
-                    // If the next input field exists, focus it.
-                    if (nextInputField) {
-                        nextInputField.focus();
-                    }
-                });
+                // If the next input field exists, focus it.
+                if (nextInputField) {
+                    nextInputField.focus();
+                }
             });
-            function concat() {
-                const inputFields = document.querySelectorAll('input[type="text"]');
+        });
+        function concat() {
+            const inputFields = document.querySelectorAll('input[type="text"]');
 
-                // Create a variable to store the concatenated value.
-                let concatenatedValue = '';
+            // Create a variable to store the concatenated value.
+            let concatenatedValue = '';
 
-                // Iterate over the input fields and concatenate their values.
-                inputFields.forEach(inputField => {
-                    concatenatedValue += inputField.value;
-                });
+            // Iterate over the input fields and concatenate their values.
+            inputFields.forEach(inputField => {
+                concatenatedValue += inputField.value;
+            });
 
-                // Set the value of the hidden field.
-                const hiddenField = document.querySelector('#result');
-                hiddenField.value = concatenatedValue;
-            }
+            // Set the value of the hidden field.
+            const hiddenField = document.querySelector('#result');
+            hiddenField.value = concatenatedValue;
+        }
     </script>
 
     <!-- JS -->
