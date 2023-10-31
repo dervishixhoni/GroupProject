@@ -60,11 +60,12 @@
 
 							<div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
 								<ul class="nav nav-tabs" role="tablist">
-									<li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab" href="#tab-1" role="tab"
-											aria-controls="tab-1" aria-selected="true">Movie</a>
+									<li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab"
+											href="#tab-1" role="tab" aria-controls="tab-1"
+											aria-selected="true">Movie</a>
 									</li>
-									<li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3" role="tab"
-											aria-controls="tab-3" aria-selected="false">Profile</a>
+									<li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"
+											role="tab" aria-controls="tab-3" aria-selected="false">Profile</a>
 									</li>
 								</ul>
 							</div>
@@ -104,19 +105,25 @@
 										{% for movie in watchlist %}
 										<tr>
 											<td>
-												<div class="main__table-text"><a href="/details/{{movie['movie_id']}}">{{movie['title']}}</a></div>
+												<div class="main__table-text"><a
+														href="/details/{{movie['movie_id']}}">{{movie['title']}}</a>
+												</div>
 											</td>
 											<td>
-												<div class="main__table-text main__table-text--rate"><i class="icon ion-ios-star"></i>{{movie['rating']|round(1)}}</div>
+												<div class="main__table-text main__table-text--rate"><i
+														class="icon ion-ios-star"></i>{{movie['rating']|round(1)}}</div>
 											</td>
 											<td>
 												<div class="main__table-text">{{movie['release_year']}}</div>
 											</td>
 											<td class="main_table-text">
-												<div class="main__table-text"><a href="/remove/{{movie['movie_id']}}" class="header__sign-in">
-													<i class="icon ion-ios-trash"></i>
-													<span>Remove</span>
-												</a></div>
+												<div class="main__table-text">
+													<form action="/remove/{{movie['movie_id']}}" method="post">
+														<button class="header__sign-in" type="submit"
+															style="color: white;"><i
+																class="icon ion-ios-trash"></i><span>Remove</span></button>
+													</form>
+												</div>
 											</td>
 										</tr>
 										{%endfor%}
@@ -214,45 +221,5 @@
 		<!-- end content tabs -->
 	</div>
 </div>
-<script>
-	const form = document.querySelector('#favorite');
-	form.addEventListener('submit', function (event) {
-		event.preventDefault();
-		const button = document.getElementById('nameofbutton')
-		const regex = /\/watch\/\d+$/;
-		str = form.action
-		str = str.split('/')
-		console.log(regex.test(form.action));
-		if (regex.test(form.action)) {
-			fetch(form.action, {
-				method: 'POST',
-				body: new FormData(form),
-			})
-				.then(response => {
-					if (response.status === 200) {
-					form.action = `/remove/${str[4]}`
-					button.innerText = 'Remove'
-				} else {
-					// Error!
-					// Handle the error here.
-				}
-				})
-		} else {
-			fetch(form.action, {
-				method: 'POST',
-				body: new FormData(form),
-			})
-				.then(response => {
-					if (response.status === 200) {
-					form.action = `/watch/${str[4]}`
-					button.innerText = 'Add To Favorites'
-				} else {
-					// Error!
-					// Handle the error here.
-				}
-				})
-		}
-	});
-</script>
 <!-- end content -->
 {% endblock %}

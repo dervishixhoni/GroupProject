@@ -131,7 +131,6 @@
 <script>
 	const form = document.querySelector('#favorite');
 	form.addEventListener('submit', function (event) {
-		document.querySelector('body').style.cursor = 'wait';
 		event.preventDefault();
 		const button = document.getElementById('nameofbutton')
 		const regex = /\/watch\/\d+$/;
@@ -167,9 +166,6 @@
 				}
 				})
 		}
-		setTimeout(() => {
-			document.querySelector('body').style.cursor = 'default';
-		}, 500);
 	});
 </script>
 {% endblock %}
