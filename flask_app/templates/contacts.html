@@ -39,15 +39,25 @@
 						<div class="col-12">
 							<form class="form form--contacts" action="/sendmail" method="post">
 								<div class="row row--form">
+									{% if loggedUser %}
+									<div class="col-12 col-xl-6">
+										<input type="text" class="form__input" id="name" placeholder="Name" name='name' value='{{loggedUser.first_name}} {{loggedUser.last_name}}'>
+									</div>
+									<div class="col-12 col-xl-6">
+										<input type="text" class="form__input" id="email" placeholder="Email" name='email' value='{{loggedUser.email}}'>
+									</div>
+									{% else%}
 									<div class="col-12 col-xl-6">
 										<input type="text" class="form__input" id="name" placeholder="Name" name='name'>
 									</div>
 									<div class="col-12 col-xl-6">
 										<input type="text" class="form__input" id="email" placeholder="Email" name='email'>
 									</div>
+									{% endif %}
 									<div class="col-12">
 										<textarea id="message" class="form__textarea" name='message' placeholder="Type your message..."></textarea>
 									</div>
+									
 									<div class="col-12">
 										<button type="submit" class="form__btn">Send</button>
 									</div>
