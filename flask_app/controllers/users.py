@@ -581,3 +581,7 @@ def senadmail():
     
     return redirect(request.referrer)
 
+@app.route('/about')
+def about():
+    return render_template("about.html")
+
