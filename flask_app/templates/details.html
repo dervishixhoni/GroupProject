@@ -29,7 +29,7 @@
 									value="{{movie['release_date']}}" />
 								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}" />
 								<button class="card___trailer" type="submit">
-									<span id="nameofbutton" >Add to favorites</span>
+									<span id="nameofbutton">Add to favorites</span>
 								</button>
 							</form>
 							{% else %}
@@ -138,32 +138,32 @@
 		str = str.split('/')
 		console.log(regex.test(form.action));
 		if (regex.test(form.action)) {
+			button.innerText = 'Remove'
 			fetch(form.action, {
 				method: 'POST',
 				body: new FormData(form),
 			})
 				.then(response => {
 					if (response.status === 200) {
-					form.action = `/remove/${str[4]}`
-					button.innerText = 'Remove'
-				} else {
-					// Error!
-					// Handle the error here.
-				}
+						form.action = `/remove/${str[4]}`
+					} else {
+						// Error!
+						// Handle the error here.
+					}
 				})
 		} else {
+			button.innerText = 'Add To Favorites'
 			fetch(form.action, {
 				method: 'POST',
 				body: new FormData(form),
 			})
 				.then(response => {
 					if (response.status === 200) {
-					form.action = `/watch/${str[4]}`
-					button.innerText = 'Add To Favorites'
-				} else {
-					// Error!
-					// Handle the error here.
-				}
+						form.action = `/watch/${str[4]}`
+					} else {
+						// Error!
+						// Handle the error here.
+					}
 				})
 		}
 	});
