@@ -48,15 +48,15 @@ def invalid_route(e):
 # Intro
 @app.route("/")
 def index():
-    if "user_id" in session:
-        return redirect("/dashboard")
-    return redirect("/logout")
+    # if "user_id" not in session:
+    #     return redirect("/dashboard")
+    return redirect("/dashboard")
 
 
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/registerPage")
+    return redirect("/dashboard")
 
 
 # Register Route
@@ -293,17 +293,34 @@ def editPassword():
     User.editpassword(data)
     return redirect(request.referrer)
 
-
-# Dashboard Route
+   
+    
 @app.route("/dashboard")
 def dashboard():
-    if "user_id" not in session:
-        return redirect("/")
-
-    data = {"user_id": session["user_id"]}
-    loggedUser = User.get_user_by_id(data)
-    if loggedUser["isVerified"] == 0:
-        return redirect("/verify/email")
+    if "user_id" in session:
+        data = {"user_id": session["user_id"]}
+        loggedUser = User.get_user_by_id(data)
+        if loggedUser["isVerified"] == 0:
+            return redirect("/verify/email")
+        url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
+        todayurl = "https://api.themoviedb.org/3/trending/movie/day?language=en-US"
+        thisweekurl = "https://api.themoviedb.org/3/trending/movie/week?language=en-US"
+        headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+        }
+        response = requests.get(url, headers=headers)
+        todayresponse = requests.get(todayurl, headers=headers)
+        thisweekresponse = requests.get(thisweekurl, headers=headers)
+        return render_template(
+            "index.html",
+            loggedUser=loggedUser,
+            movies=response.json()["results"],
+            genredict=genredict,
+            todaytrending=todayresponse.json()["results"][:18],
+            thisweektrending=thisweekresponse.json()["results"][:18],
+        )
+        
     url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
     todayurl = "https://api.themoviedb.org/3/trending/movie/day?language=en-US"
     thisweekurl = "https://api.themoviedb.org/3/trending/movie/week?language=en-US"
@@ -316,7 +333,6 @@ def dashboard():
     thisweekresponse = requests.get(thisweekurl, headers=headers)
     return render_template(
         "index.html",
-        loggedUser=loggedUser,
         movies=response.json()["results"],
         genredict=genredict,
         todaytrending=todayresponse.json()["results"][:18],
@@ -327,7 +343,32 @@ def dashboard():
 @app.route("/details/<int:id>")
 def details(id):
     if "user_id" not in session:
-        return redirect("/")
+        headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+        }
+        detailurl = f"https://api.themoviedb.org/3/movie/{id}?language=en-US"
+        response = requests.get(detailurl, headers=headers)
+        videourl = f"https://api.themoviedb.org/3/movie/{id}/videos?language=en-US"
+        videoresponse = requests.get(videourl, headers=headers)
+        trailer_url = "notrailer"
+        if videoresponse != 200:
+            for r in videoresponse.json()["results"]:
+                if r["type"] == "Trailer" and r["site"] == "YouTube":
+                    trailer_url = r["key"]
+        genres = ""
+        for i in range(len(response.json()["genres"]) - 1):
+            genres += str(response.json()["genres"][i]["id"]) + "|"
+        genres += str(response.json()["genres"][len(response.json()["genres"]) - 1]["id"])
+        url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={genres}"
+        recresponse = requests.get(url, headers=headers)
+        return render_template(
+            "details.html",
+            movie=response.json(),
+            recommendations=recresponse.json(),
+            trailer=trailer_url,
+            genredict=genredict,
+        )
     data = {"user_id": session["user_id"]}
     headers = {
         "accept": "application/json",
@@ -359,10 +400,29 @@ def details(id):
     )
 
 
-@app.route("/catalog")
-def catalog():
+@app.route("/incatalog")
+def incatalog():
     if "user_id" not in session:
         return redirect("/")
+    
+    
+@app.route("/catalog")
+def catalog():
+    
+    if "user_id" in session:
+        headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+        }
+        url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&sort_by=popularity.desc"
+        response = requests.get(url, headers=headers)
+        return render_template(
+            "catalog.html",
+            base=response.json()["results"][:18],
+            genredict=genredict,
+            loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
+        )
+        
     headers = {
         "accept": "application/json",
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
@@ -373,14 +433,24 @@ def catalog():
         "catalog.html",
         base=response.json()["results"][:18],
         genredict=genredict,
-        loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
     )
 
 
 @app.route("/catalog/<int:id>")
 def catalogwithgenre(id):
     if "user_id" not in session:
-        return redirect("/")
+        headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
+        }
+        url = f"https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres={id}"
+        response = requests.get(url, headers=headers)
+        return render_template(
+            "catalog.html",
+            base=response.json()["results"][:18],
+            genredict=genredict,
+            preset = genredict[id]  
+        )
     headers = {
         "accept": "application/json",
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
@@ -398,8 +468,8 @@ def catalogwithgenre(id):
 
 @app.route("/search", methods=["POST"])
 def search():
-    if "user_id" not in session:
-        return redirect("/")
+    # if "user_id" not in session:
+    #     return redirect("/")
     headers = {
         "accept": "application/json",
         "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTk0Y2QzNmM1ZDlhYmNlOGE2OTc1ZTQ1NzA4M2U0NSIsInN1YiI6IjY1MzdiZWVkZjQ5NWVlMDBmZjY1YmFjMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uuPeImHHYdXO-uOU0SvkHLZlQrUVxqwiiuoxvu2lRXo",
@@ -420,7 +490,7 @@ def search():
             "result.html",
             movies=results[:18],
             genredict=genredict,
-            loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
+            # loggedUser=User.get_user_by_id({"user_id": session["user_id"]}),
             search = search
         )
     else:
@@ -447,7 +517,7 @@ def profile(id):
 @app.route("/watch/<int:id>", methods=["POST"])
 def watchlist(id):
     if "user_id" not in session:
-        return redirect("/")
+        return redirect("/loginPage")
     data = {
         "user_id": session["user_id"],
         "movie_id": id,
@@ -476,7 +546,7 @@ def remove(id):
 @app.route("/contact")
 def contact():
     if "user_id" not in session:
-        return redirect("/")
+        return render_template("contacts.html")
     data = {"user_id": session["user_id"]}
     loggedUser = User.get_user_by_id(data)
     return render_template("contacts.html", loggedUser=loggedUser)
@@ -484,8 +554,8 @@ def contact():
 
 @app.route("/sendmail", methods=["POST"])
 def senadmail():
-    if "user_id" not in session:
-        return redirect("/")
+    # if "user_id" not in session:
+    #     return redirect("/")
     name = request.form.get('name')
     email = request.form.get('email')
     message = request.form.get('message')
@@ -509,7 +579,5 @@ def senadmail():
     server.sendmail(SENDER, TOADDRS, msg)
     server.quit()
     
-    
-    print(message)
     return redirect(request.referrer)
 

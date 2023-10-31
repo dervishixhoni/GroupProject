@@ -40,13 +40,22 @@
                                 <a class="header__nav-link" href="/">Home</a>
                             </li>
 
+                            {% if loggedUser %}
+                            <li class="header__nav-item">
+                                <a class="header__nav-link" href="/incatalog">Catalog</a>
+                            </li>
+                            {% else %}
                             <li class="header__nav-item">
                                 <a class="header__nav-link" href="/catalog">Catalog</a>
                             </li>
+                            {% endif %}
 
+                            {% if loggedUser %}
                             <li class="header__nav-item">
                                 <a href="/profile/{{loggedUser['id']}}" class="header__nav-link">Profile</a>
                             </li>
+                            {% endif %}
+                            
 
                         </ul>
 
@@ -66,10 +75,17 @@
                                 <i class="icon ion-ios-search"></i>
                             </button>
 
+                            {% if loggedUser %}
                             <a href="/logout" class="header__sign-in">
                                 <i class="icon ion-ios-log-out"></i>
                                 <span>log out</span>
                             </a>
+                            {% else %}
+                            <a href="/loginPage" class="header__sign-in">
+                                <i class="icon ion-ios-log-in"></i>
+                                <span>log in</span>
+                            </a>
+                            {% endif %}
                         </div>
                         <!-- end header auth -->
 
