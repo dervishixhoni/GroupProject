@@ -177,7 +177,7 @@ def activateAccount():
         string = "0123456789"
         vCode = ""
         length = len(string)
-        for i in range(8):
+        for i in range(6):
             vCode += string[math.floor(random.random() * length)]
         verificationCode = vCode
         dataUpdate = {
@@ -471,3 +471,45 @@ def remove(id):
     loggedUser = User.get_user_by_id(data)
     Watchlist.delete(data)
     return redirect(request.referrer)
+
+
+@app.route("/contact")
+def contact():
+    if "user_id" not in session:
+        return redirect("/")
+    data = {"user_id": session["user_id"]}
+    loggedUser = User.get_user_by_id(data)
+    return render_template("contacts.html", loggedUser=loggedUser)
+
+
+@app.route("/sendmail", methods=["POST"])
+def senadmail():
+    if "user_id" not in session:
+        return redirect("/")
+    name = request.form.get('name')
+    email = request.form.get('email')
+    message = request.form.get('message')
+    LOGIN = ADMINEMAIL
+    TOADDRS = ADMINEMAIL
+    SENDER = ADMINEMAIL
+    SUBJECT = "Conatct"
+    msg = "From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n" % (
+        (SENDER),
+        "".join(TOADDRS),
+        SUBJECT,
+    )
+    msg += (
+        f"Name: {name}\nEmail: {email}\nMessage: {message}"
+    )
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.set_debuglevel(1)
+    server.ehlo()
+    server.starttls()
+    server.login(LOGIN, PASSWORD)
+    server.sendmail(SENDER, TOADDRS, msg)
+    server.quit()
+    
+    
+    print(message)
+    return redirect(request.referrer)
+
