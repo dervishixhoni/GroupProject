@@ -460,7 +460,7 @@ def watchlist(id):
     return redirect(request.referrer)
 
 
-@app.route("/remove/<int:id>")
+@app.route("/remove/<int:id>",methods=['POST'])
 def remove(id):
     if "user_id" not in session:
         return redirect("/")

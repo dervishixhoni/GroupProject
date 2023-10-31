@@ -24,18 +24,24 @@
 							</div>
 							{% if movie['id'] not in watchlist %}
 							<form id="favorite" action="/watch/{{movie['id']}}" method="post">
-								<input type="hidden" class="title" name="title" value="{{movie['title']}}"/>
-								<input type="hidden" class="release_year" name="release_year" value="{{movie['release_date']}}"/>
-								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}"/>
+								<input type="hidden" class="title" name="title" value="{{movie['title']}}" />
+								<input type="hidden" class="release_year" name="release_year"
+									value="{{movie['release_date']}}" />
+								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}" />
 								<button class="card___trailer" type="submit">
 									<span>Add to favorites</span>
 								</button>
 							</form>
 							{% else %}
-							<a href="/remove/{{movie['id']}}" class="card___trailer">
-								<span>Remove</span>
-							</a>
-							{% endif %}
+							<form id="favorite" action="/remove/{{movie['id']}}" method="post">
+								<input type="hidden" class="title" name="title" value="{{movie['title']}}" />
+								<input type="hidden" class="release_year" name="release_year"
+									value="{{movie['release_date']}}" />
+								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}" />
+								<button class="card___trailer" type="submit">
+									<span id="nameofbutton">Remove</span>
+								</button>
+								{% endif %}
 						</div>
 						<!-- end card cover -->
 
@@ -82,8 +88,8 @@
 <!-- end details -->
 
 <!-- content -->
-<section class="content" >
-	<div class="content__head" style="border-bottom: 0px;"	>
+<section class="content">
+	<div class="content__head" style="border-bottom: 0px;">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
@@ -122,5 +128,47 @@
 	</div>
 </section>
 <!-- end content -->
-
+<script>
+	const form = document.querySelector('#favorite');
+	form.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		const button = document.getElementById('nameofbutton')
+		const regex = /^\/watch\/(\d+)$/;
+		str = form.action
+		str = str.split('/')
+		if (regex.test(form.action)) {
+			const response = await fetch(form.action, {
+				method: 'POST',
+				body: JSON.stringify({
+					title: form.querySelector('.title').value,
+					release_year: form.querySelector('.release_year').value,
+					rating: form.querySelector('.rating').value,
+				}),
+			});
+			if (response.status === 200) {
+				form.action = `/remove/${str[4]}`
+				button.innerText = 'Remove'
+			} else {
+				// Error!
+				// Handle the error here.
+			}
+		} else {
+			const response = await fetch(form.action, {
+				method: 'POST',
+				body: JSON.stringify({
+					title: form.querySelector('.title').value,
+					release_year: form.querySelector('.release_year').value,
+					rating: form.querySelector('.rating').value,
+				}),
+			});
+			if (response.status === 200) {
+				form.action = `/watch/${str[4]}`
+				button.innerText = 'Add To Favorites'
+			} else {
+				// Error!
+				// Handle the error here.
+			}
+		}
+	});
+</script>
 {% endblock %}
