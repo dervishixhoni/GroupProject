@@ -24,9 +24,10 @@
 							</div>
 							{% if movie['id'] not in watchlist %}
 							<form action="/watch/{{movie['id']}}" method="post">
-								<input type="hidden" class="title" name="title" value="{{movie['title']}}"/>
-								<input type="hidden" class="release_year" name="release_year" value="{{movie['release_date']}}"/>
-								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}"/>
+								<input type="hidden" class="title" name="title" value="{{movie['title']}}" />
+								<input type="hidden" class="release_year" name="release_year"
+									value="{{movie['release_date']}}" />
+								<input type="hidden" class="rating" name="rating" value="{{ movie['vote_average'] }}" />
 								<button class="card___trailer" type="submit">
 									<span>Add to favorites</span>
 								</button>
@@ -82,8 +83,8 @@
 <!-- end details -->
 
 <!-- content -->
-<section class="content" >
-	<div class="content__head" style="border-bottom: 0px;"	>
+<section class="content">
+	<div class="content__head" style="border-bottom: 0px;">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
@@ -122,5 +123,29 @@
 	</div>
 </section>
 <!-- end content -->
+<script>
+	const form = document.querySelector('form');
+	form.addEventListener('submit', async (event) => {
+		// Prevent the default form submission behavior.
+		event.preventDefault();
+		formdata = new FormData(form)
+		// Create an AJAX request to submit the form data.
+		const response = await fetch(`/watch/${movie['id']}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: formdata
+		});
 
+		// Handle the response from the server.
+		if (response.status === 200) {
+			// Success!
+			// You can update the UI here to show that the movie has been added to favorites.
+		} else {
+			// Error!
+			// Handle the error here.
+		}
+	});
+</script>
 {% endblock %}
