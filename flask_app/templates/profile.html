@@ -214,5 +214,45 @@
 		<!-- end content tabs -->
 	</div>
 </div>
+<script>
+	const form = document.querySelector('#favorite');
+	form.addEventListener('submit', function (event) {
+		event.preventDefault();
+		const button = document.getElementById('nameofbutton')
+		const regex = /\/watch\/\d+$/;
+		str = form.action
+		str = str.split('/')
+		console.log(regex.test(form.action));
+		if (regex.test(form.action)) {
+			fetch(form.action, {
+				method: 'POST',
+				body: new FormData(form),
+			})
+				.then(response => {
+					if (response.status === 200) {
+					form.action = `/remove/${str[4]}`
+					button.innerText = 'Remove'
+				} else {
+					// Error!
+					// Handle the error here.
+				}
+				})
+		} else {
+			fetch(form.action, {
+				method: 'POST',
+				body: new FormData(form),
+			})
+				.then(response => {
+					if (response.status === 200) {
+					form.action = `/watch/${str[4]}`
+					button.innerText = 'Add To Favorites'
+				} else {
+					// Error!
+					// Handle the error here.
+				}
+				})
+		}
+	});
+</script>
 <!-- end content -->
 {% endblock %}
