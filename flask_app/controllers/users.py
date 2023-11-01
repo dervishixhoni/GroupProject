@@ -293,7 +293,6 @@ def editPassword():
     User.editpassword(data)
     return redirect(request.referrer)
 
-   
     
 @app.route("/dashboard")
 def dashboard():
@@ -402,8 +401,7 @@ def details(id):
 
 @app.route("/incatalog")
 def incatalog():
-    if "user_id" not in session:
-        return redirect("/")
+    return redirect("/")
     
     
 @app.route("/catalog")

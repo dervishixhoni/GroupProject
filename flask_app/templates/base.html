@@ -39,16 +39,10 @@
                             <li class="header__nav-item">
                                 <a class="header__nav-link" href="/">Home</a>
                             </li>
-
-                            {% if loggedUser %}
-                            <li class="header__nav-item">
-                                <a class="header__nav-link" href="/incatalog">Catalog</a>
-                            </li>
-                            {% else %}
+                            
                             <li class="header__nav-item">
                                 <a class="header__nav-link" href="/catalog">Catalog</a>
                             </li>
-                            {% endif %}
 
                             {% if loggedUser %}
                             <li class="header__nav-item">
