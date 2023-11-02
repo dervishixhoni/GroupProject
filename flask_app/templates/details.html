@@ -22,7 +22,7 @@
 								<img src="https://image.tmdb.org/t/p/w500{{movie['poster_path']}}" alt="">
 								<span class="card__rate card__rate--yellow">{{movie['vote_average']|round(1)}}</span>
 							</div>
-							{% if watchlist %}
+							{% if loggedUser %}
 							{% if movie['id'] not in watchlist %}
 							<form id="favorite" action="/watch/{{movie['id']}}" method="post">
 								<input type="hidden" class="title" name="title" value="{{movie['title']}}" />
@@ -42,12 +42,13 @@
 								<button class="card___trailer" type="submit">
 									<span id="nameofbutton">Remove</span>
 								</button>
-								{% endif %}
-								{% else %}
-								<a class="card___trailer" href="/loginPage">
-									<span id="nameofbutton" >Add to favorites</span>
-								</a>
-								{% endif %}
+							</form>
+							{% endif %}
+							{% else %}
+							<a class="card___trailer" href="/loginPage">
+								<span id="nameofbutton" >Add to favorites</span>
+							</a>
+							{% endif %}
 						</div>
 						<!-- end card cover -->
 
