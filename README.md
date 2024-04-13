@@ -1,9 +1,9 @@
 # Movie Watchlist App
 
-![GitHub repo size](https://img.shields.io/github/repo-size/dervishixhoni/moviewatchlistapp)
-![GitHub contributors](https://img.shields.io/github/contributors/dervishixhoni/moviewatchlistapp)
-![GitHub stars](https://img.shields.io/github/stars/dervishixhoni/moviewatchlistapp?style=social)
-![GitHub forks](https://img.shields.io/github/forks/dervishixhoni/moviewatchlistapp?style=social)
+![GitHub repo size](https://img.shields.io/github/repo-size/dervishixhoni/GroupProject)
+![GitHub contributors](https://img.shields.io/github/contributors/dervishixhoni/GroupProject)
+![GitHub stars](https://img.shields.io/github/stars/dervishixhoni/GroupProject?style=social)
+![GitHub forks](https://img.shields.io/github/forks/dervishixhoni/GroupProject?style=social)
 
 ## Overview
 This is a Flask-based web application for finding, watchlisting, and watching movie trailers using the TMDb API (The Movie Database). Users can search for movies, add them to their watchlist, and watch trailers directly on the platform. This project showcases how to integrate Flask, Bootstrap, and Font Awesome to create an interactive movie watching experience.
